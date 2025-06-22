@@ -1,0 +1,312 @@
+/* Donation Tracking Page Styles - v2 */
+/* Last updated: March 16, 2024 */
+.donation-tracking {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* User Welcome Section */
+.user-welcome {
+  background: linear-gradient(135deg, #879957, #6a7a44);
+  color: white;
+  padding: 2.5rem;
+  border-radius: 20px;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.user-welcome::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+  pointer-events: none;
+}
+
+.user-welcome h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.user-welcome i {
+  font-size: 2.2rem;
+}
+
+/* Donation Summary Section */
+.donation-summary {
+  margin-bottom: 3rem;
+}
+
+.donation-summary h2 {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.summary-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.summary-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #879957, #6a7a44);
+}
+
+.summary-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.summary-card h3 {
+  font-size: 2.2rem;
+  color: #879957;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+
+.summary-card p {
+  color: #6c757d;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.summary-card i {
+  font-size: 1.2rem;
+  color: #879957;
+}
+
+/* Current Projects Section */
+.current-projects {
+  margin-bottom: 3rem;
+}
+
+.current-projects h2 {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.project-card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+}
+
+.project-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.project-info {
+  padding: 1.5rem;
+}
+
+.project-info h3 {
+  font-size: 1.3rem;
+  color: #2c3e50;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.project-info p {
+  color: #6c757d;
+  margin-bottom: 1.2rem;
+  line-height: 1.5;
+}
+
+.project-progress {
+  margin-top: 1rem;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress {
+  height: 100%;
+  background: linear-gradient(90deg, #879957, #6a7a44);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.project-progress span {
+  color: #879957;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Donation History Section */
+.donation-history {
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.donation-history h2 {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.history-table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.history-table table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.history-table th {
+  background: #f8f9fa;
+  padding: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  text-align: left;
+  border-bottom: 2px solid #879957;
+}
+
+.history-table td {
+  padding: 1.2rem;
+  border-bottom: 1px solid #e9ecef;
+  color: #6c757d;
+}
+
+.history-table tr:hover td {
+  background: #f8f9fa;
+}
+
+.history-table i {
+  color: #879957;
+  margin-right: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .summary-cards,
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .donation-tracking {
+    padding: 1rem;
+  }
+
+  .user-welcome {
+    padding: 2rem;
+  }
+
+  .user-welcome h1 {
+    font-size: 2rem;
+  }
+
+  .summary-cards,
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .donation-history {
+    padding: 1.5rem;
+  }
+
+  .history-table {
+    overflow-x: auto;
+  }
+
+  .history-table table {
+    min-width: 600px;
+  }
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.summary-card,
+.project-card,
+.donation-history {
+  animation: fadeInUp 0.6s ease forwards;
+} 

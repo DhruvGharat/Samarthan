@@ -1,0 +1,101 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SAMARTHAN{% endblock %}</title>
+    <!-- CSRF Token for AJAX requests -->
+    {% csrf_token %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ngo_style.css' %}">
+    {% block extra_css %}{% endblock %}
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            flex: 1;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        footer {
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="{% url 'home' %}">
+                    <img src="{% static 'images/logo.png' %}" alt="SAMARTHAN Logo" class="logo-img">
+                    <span>SAMARTHAN</span>
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="{% url 'ngo_profile_self' %}" class="{% if request.resolver_match.url_name == 'ngo_profile' or request.resolver_match.url_name == 'ngo_profile_self' %}active{% endif %}">Registration</a>
+                <a href="{% url 'ngo_donations' %}" class="{% if request.resolver_match.url_name == 'ngo_donations' %}active{% endif %}">Donations</a>
+                <a href="{% url 'ngo_about' %}" class="{% if request.resolver_match.url_name == 'ngo_about' %}active{% endif %}">About Us</a>
+                <a href="{% url 'ngo_contact' %}" class="{% if request.resolver_match.url_name == 'ngo_contact' %}active{% endif %}">Contact</a>
+                <a href="{% url 'logout' %}" class="logout-button">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="{% static 'images/logo.png' %}" alt="SAMARTHAN">
+                <p>SAMARTHAN</p>
+            </div>
+            <div class="footer-newsletter">
+                <p>Subscribe to our newsletter</p>
+                <div class="newsletter-form">
+                    <input type="email" placeholder="Enter your email">
+                    <button class="btn">Subscribe</button>
+                </div>
+            </div>
+            <div class="footer-links">
+                <div class="footer-nav">
+                    <a href="{% url 'about' %}">About Us</a>
+                    <a href="{% url 'home' %}#features">Features</a>
+                    <a href="{% url 'contact' %}">Contact Us</a>
+                </div>
+                <div class="social-links">
+                    <a href="#"><img src="{% static 'images/twitter.png' %}" alt="Twitter"></a>
+                    <a href="#"><img src="{% static 'images/facebook.png' %}" alt="Facebook"></a>
+                    <a href="#"><img src="{% static 'images/linkedin.png' %}" alt="LinkedIn"></a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <p>© 2023 SAMARTHAN | Privacy Policy | Terms of Service</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

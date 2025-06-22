@@ -1,0 +1,458 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}SAMARTHAN - NGO Discovery{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/ngo_discovery.css' %}">
+<style>
+    .ngo-contact {
+        margin: 1rem 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .contact-item i {
+        color: var(--primary-color);
+        font-size: 1rem;
+    }
+
+    .contact-item span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        line-height: 1.3;
+    }
+    
+    /* Override card styles for better layout */
+    .ngo-card {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .ngo-card-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .ngo-grid {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    }
+    
+    /* New styles for the info items */
+    .info-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 10px;
+        gap: 10px;
+    }
+    
+    .info-item i {
+        color: var(--primary-color);
+        font-size: 16px;
+        margin-top: 3px;
+        min-width: 16px;
+    }
+    
+    .info-content {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+    
+    .info-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 2px;
+    }
+    
+    .info-value {
+        font-size: 0.85rem;
+        color: var(--text-primary);
+        line-height: 1.4;
+        word-break: break-word;
+    }
+    
+    .ngo-info {
+        margin-bottom: 12px;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        padding-bottom: 10px;
+        flex: 1;
+    }
+    
+    .ngo-mission {
+        margin-top: auto;
+        padding-top: 10px;
+    }
+    
+    /* Toast notification styles */
+    .toast-message {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 1000;
+    }
+    
+    .toast-message.success {
+        background-color: #dff0d8;
+        border-color: #d6e9c6;
+        color: #3c763d;
+    }
+    
+    .toast-icon {
+        font-size: 18px;
+    }
+    
+    .toast-content {
+        flex: 1;
+    }
+    
+    .toast-close {
+        background-color: transparent;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+    }
+    
+    .toast-close i {
+        font-size: 18px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ngo-discovery-wrapper">
+    <aside class="sidebar">
+        <div class="filter-section">
+            <h3>Filter by Category</h3>
+            <form id="filterForm" method="GET" action="{% url 'ngo_discovery' %}">
+                <div class="filter-options">
+                    <label class="filter-option">
+                        <input type="checkbox" name="categories" value="education" {% if 'education' in request.GET.categories %}checked{% endif %}>
+                        <span>Education</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" name="categories" value="healthcare" {% if 'healthcare' in request.GET.categories %}checked{% endif %}>
+                        <span>Healthcare</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" name="categories" value="environment" {% if 'environment' in request.GET.categories %}checked{% endif %}>
+                        <span>Environment</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" name="categories" value="animal" {% if 'animal' in request.GET.categories %}checked{% endif %}>
+                        <span>Animal Welfare</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" name="categories" value="food" {% if 'food' in request.GET.categories %}checked{% endif %}>
+                        <span>Food</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" name="categories" value="shelter" {% if 'shelter' in request.GET.categories %}checked{% endif %}>
+                        <span>Shelter</span>
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" name="categories" value="others" {% if 'others' in request.GET.categories %}checked{% endif %}>
+                        <span>Others</span>
+                    </label>
+                </div>
+                <div class="filter-actions">
+                    <button type="submit" class="filter-btn">Apply Filters</button>
+                    <button type="reset" class="reset-btn" id="resetFilters">Reset</button>
+                </div>
+            </form>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="content-header">
+            <h1>Discover NGOs</h1>
+            <p>Find and connect with NGOs making a difference in your community</p>
+        </div>
+        <div class="ngo-grid">
+            {% for ngo in ngos %}
+            <article class="ngo-card">
+                <div class="ngo-card-image">
+                    {% if ngo.ngo_profile_image %}
+                    <img src="{{ ngo.ngo_profile_image.url }}" alt="{{ ngo.name }} NGO">
+                    {% else %}
+                    <img src="{% static 'images/default-ngo.jpg' %}" alt="Default NGO Image">
+                    {% endif %}
+                    <div class="ngo-category-badge">{{ ngo.services }}</div>
+                </div>
+                <div class="ngo-card-content">
+                    <h3 class="ngo-name">{{ ngo.name }}</h3>
+                    <div class="ngo-info">
+                        <div class="info-item">
+                            <i class="fas fa-phone"></i>
+                            <div class="info-content">
+                                <span class="info-label">Contact Number:</span>
+                                <span class="info-value">{{ ngo.contact_number|default:"Not provided" }}</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <div class="info-content">
+                                <span class="info-label">Email:</span>
+                                <span class="info-value">{{ ngo.email }}</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div class="info-content">
+                                <span class="info-label">Address:</span>
+                                <span class="info-value">{{ ngo.address|default:"Not provided"|truncatechars:50 }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="ngo-mission">{{ ngo.mission|truncatewords:20 }}</p>
+                </div>
+                <div class="ngo-actions">
+                    <a href="{% url 'donate_to_ngo' ngo.id %}" class="donate-btn">
+                        <span>Donate Now</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 17H2a3 3 0 0 0 3-3V9a7 7 0 0 1 14 0v5a3 3 0 0 0 3 3zm-8.27-8.9a2 2 0 0 0-3.46 0"></path>
+                        </svg>
+                    </a>
+                    <a href="{% url 'ngo_details' ngo.id %}" class="view-details-btn">
+                        <span>View Details</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        </svg>
+                    </a>
+                </div>
+            </article>
+            {% empty %}
+            <div class="no-results">
+                <p>No NGOs found matching your criteria.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+</div>
+
+<!-- Toast container -->
+<div id="toastContainer"></div>
+
+<!-- Donation Form Modal -->
+<div class="donation-modal-overlay" id="donation-modal" style="display: none;">
+    <div class="donation-modal">
+        <div class="modal-header">
+            <h3>Donate to <span id="ngo-name"></span></h3>
+            <button class="close-btn" onclick="document.getElementById('donation-modal').style.display='none'">&times;</button>
+        </div>
+        <div class="modal-content">
+            <form id="donation-form" method="post">
+                {% csrf_token %}
+                <input type="hidden" id="ngo-id-input" name="ngo_id">
+                
+                <div class="form-group">
+                    <label for="user-name">Your Name</label>
+                    <input type="text" id="user-name" name="user_name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="user-email">Your Email</label>
+                    <input type="email" id="user-email" name="user_email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="user-account-number">Your Account Number</label>
+                    <input type="text" id="user-account-number" name="user_account_number" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="user-ifsc-code">Your IFSC Code</label>
+                    <input type="text" id="user-ifsc-code" name="user_ifsc_code" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="user-bank-name">Your Bank Name</label>
+                    <input type="text" id="user-bank-name" name="user_bank_name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="donation-amount">Amount (₹)</label>
+                    <select id="donation-amount-selector" onchange="setCustomAmount(this.value)">
+                        <option value="">Select Amount</option>
+                        <option value="100">₹100</option>
+                        <option value="500">₹500</option>
+                        <option value="1000">₹1,000</option>
+                        <option value="5000">₹5,000</option>
+                        <option value="10000">₹10,000</option>
+                        <option value="50000">₹50,000</option>
+                        <option value="100000">₹100,000</option>
+                        <option value="custom">Custom Amount</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="custom-amount-container" style="display: none;">
+                    <label for="custom-donation-amount">Custom Amount (₹)</label>
+                    <input type="text" id="custom-donation-amount" onkeyup="updateDonationAmount(this.value)">
+                </div>
+
+                <input type="hidden" id="donation-amount" name="amount" value="" required>
+                
+                <button type="submit" class="btn submit-btn">Submit Donation</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to set custom amount
+    window.setCustomAmount = function(value) {
+        if (value === 'custom') {
+            document.getElementById('custom-amount-container').style.display = 'block';
+            document.getElementById('custom-donation-amount').focus();
+        } else {
+            document.getElementById('custom-amount-container').style.display = 'none';
+            document.getElementById('donation-amount').value = value;
+        }
+    };
+    
+    // Function to update donation amount from custom input
+    window.updateDonationAmount = function(value) {
+        // Remove any non-numeric characters
+        value = value.replace(/[^0-9]/g, '');
+        
+        // Validate against max
+        const numValue = parseInt(value, 10);
+        if (!isNaN(numValue)) {
+            if (numValue > 100000) {
+                value = '100000';
+                document.getElementById('custom-donation-amount').value = value;
+            }
+        }
+        
+        document.getElementById('donation-amount').value = value;
+    };
+    
+    // Debug the donation amount input field
+    const donationAmountInput = document.getElementById('donation-amount');
+    if (donationAmountInput) {
+        // Clear any existing attributes that might restrict input
+        donationAmountInput.removeAttribute('maxlength');
+        donationAmountInput.removeAttribute('pattern');
+        donationAmountInput.removeAttribute('max');
+        donationAmountInput.removeAttribute('min');
+        
+        // Add event listener to validate input
+        donationAmountInput.addEventListener('input', function(e) {
+            // Remove any non-numeric characters
+            this.value = this.value.replace(/[^0-9]/g, '');
+            
+            console.log('Current value:', this.value);
+        });
+    }
+    
+    // Check for donation success parameter in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('donation_success') === 'true') {
+        const ngoName = urlParams.get('ngo_name') || 'the NGO';
+        
+        // Create and show a toast notification
+        const toastContainer = document.getElementById('toastContainer');
+        if (toastContainer) {
+            const toast = document.createElement('div');
+            toast.className = 'toast-message success';
+            toast.setAttribute('role', 'alert');
+            
+            toast.innerHTML = `
+                <div class="toast-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="toast-content">
+                    <p>Donation made successfully to ${ngoName}. Thank You!</p>
+                </div>
+                <button class="toast-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // Add event listener to close button
+            toast.querySelector('.toast-close').addEventListener('click', function() {
+                toast.remove();
+            });
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                toast.remove();
+            }, 5000);
+            
+            // Clean URL without reloading the page
+            const newUrl = window.location.pathname;
+            window.history.replaceState({}, document.title, newUrl);
+        }
+    }
+    
+    // Reset button handler
+    const resetBtn = document.getElementById('resetFilters');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', function() {
+            window.location.href = "{% url 'ngo_discovery' %}";
+        });
+    }
+    
+    // Donation form handler
+    const donationForm = document.getElementById('donation-form');
+    if (donationForm) {
+        donationForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const ngoId = document.getElementById('ngo-id-input').value;
+            const ngoName = document.getElementById('ngo-name').innerText;
+            
+            fetch(`/donate/${ngoId}/`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Close the modal
+                    document.getElementById('donation-modal').style.display = 'none';
+                    
+                    // Redirect to NGO discovery with success message
+                    window.location.href = "{% url 'ngo_discovery' %}?donation_success=true&ngo_name=" + encodeURIComponent(ngoName);
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while processing your donation. Please try again.');
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,143 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}CSRF Error - SAMARTHAN{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="error-panel">
+        <h1>CSRF Verification Failed</h1>
+        <p class="error-message">{{ reason }}</p>
+        
+        <div class="error-details">
+            <h2>Error Details</h2>
+            <p>This information will help in diagnosing the CSRF issue:</p>
+            
+            <div class="detail-section">
+                <h3>Request Information</h3>
+                <ul>
+                    <li><strong>Path:</strong> {{ request_path }}</li>
+                    <li><strong>Method:</strong> {{ request_method }}</li>
+                    <li><strong>CSRF Token:</strong> {{ csrf_token }}</li>
+                </ul>
+            </div>
+            
+            <div class="detail-section">
+                <h3>Request Headers</h3>
+                <pre>{{ request_headers|pprint }}</pre>
+            </div>
+        </div>
+        
+        <div class="troubleshooting">
+            <h2>Troubleshooting Steps</h2>
+            <ol>
+                <li>Clear your browser cookies and cache</li>
+                <li>Try using a private/incognito browser window</li>
+                <li>Ensure JavaScript is enabled in your browser</li>
+                <li>Check if you're submitting the form from the same domain</li>
+                <li>Go back to the <a href="{% url 'login_ngo' %}">login page</a> and try again</li>
+            </ol>
+        </div>
+        
+        <div class="navigation-links">
+            <a href="{% url 'home' %}" class="btn">Return to Home</a>
+            <a href="{% url 'login_ngo' %}" class="btn">Try Again</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+    
+    .error-panel {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        padding: 30px;
+    }
+    
+    h1 {
+        color: #dc3545;
+        margin-bottom: 20px;
+    }
+    
+    .error-message {
+        font-size: 18px;
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 30px;
+    }
+    
+    .error-details {
+        margin-bottom: 30px;
+    }
+    
+    .detail-section {
+        margin-bottom: 20px;
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+    }
+    
+    h2 {
+        color: #333;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    
+    h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+    
+    pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        background-color: #f1f1f1;
+        padding: 10px;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+    
+    .troubleshooting {
+        margin-bottom: 30px;
+    }
+    
+    .troubleshooting ol {
+        padding-left: 20px;
+    }
+    
+    .troubleshooting li {
+        margin-bottom: 8px;
+    }
+    
+    .navigation-links {
+        display: flex;
+        gap: 15px;
+    }
+    
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #28a745;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+    
+    .btn:hover {
+        background-color: #218838;
+    }
+</style>
+{% endblock %} 

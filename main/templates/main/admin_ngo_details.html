@@ -1,0 +1,354 @@
+{% extends 'main/admin_base.html' %}
+{% load static %}
+
+{% block title %}{{ ngo.name }} - SAMARTHAN Admin{% endblock %}
+
+{% block content %}
+<div class="admin-details">
+    <div class="admin-details-header">
+        <div class="header-left">
+            <a href="{% url 'admin_ngo_info' %}" class="back-btn">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                <span>Back to NGOs</span>
+            </a>
+            <h1>{{ ngo.name }}</h1>
+        </div>
+        <div class="admin-actions">
+            {% if not ngo.is_verified %}
+            <a href="{% url 'admin_verify_ngo' ngo.id %}" class="admin-btn admin-btn-primary">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                Verify NGO
+            </a>
+            {% endif %}
+            <a href="{% url 'admin_remove_ngo' ngo.id %}" class="admin-btn admin-btn-danger" onclick="return confirm('Are you sure you want to remove this NGO?')">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                Remove
+            </a>
+        </div>
+    </div>
+
+    <div class="admin-details-content">
+        <!-- NGO Profile Photo Section -->
+        <div class="admin-details-section">
+            <h2>NGO Profile</h2>
+            <div class="ngo-profile-image-container">
+                {% if ngo.signup_ngo.ngo_profile_image %}
+                <img src="{{ ngo.signup_ngo.ngo_profile_image.url }}" alt="{{ ngo.name }} Profile Image" class="ngo-profile-image">
+                {% else %}
+                <div class="ngo-profile-image-placeholder">
+                    <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    <p>No profile image</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="admin-details-section">
+            <h2>Basic Information</h2>
+            <div class="admin-details-grid">
+                <div class="admin-details-item">
+                    <div class="admin-details-label">Registration Number</div>
+                    <div class="admin-details-value">{{ ngo.registration_number }}</div>
+                </div>
+                <div class="admin-details-item">
+                    <div class="admin-details-label">Category</div>
+                    <div class="admin-details-value">{{ ngo.signup_ngo.category }}</div>
+                </div>
+                <div class="admin-details-item">
+                    <div class="admin-details-label">Verification Status</div>
+                    <div class="admin-details-value">
+                        {% if ngo.is_verified %}
+                        <span class="status-badge status-verified">Verified</span>
+                        {% else %}
+                        <span class="status-badge status-pending">Pending Verification</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-details-section">
+            <h2>Contact Information</h2>
+            <div class="admin-details-grid">
+                <div class="admin-details-item">
+                    <div class="admin-details-label">Email</div>
+                    <div class="admin-details-value">{{ ngo.email }}</div>
+                </div>
+                <div class="admin-details-item">
+                    <div class="admin-details-label">Phone</div>
+                    <div class="admin-details-value">{{ ngo.contact_number }}</div>
+                </div>
+                <div class="admin-details-item full-width">
+                    <div class="admin-details-label">Address</div>
+                    <div class="admin-details-value">{{ ngo.address }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-details-section">
+            <h2>Services & Description</h2>
+            <div class="admin-details-grid">
+                <div class="admin-details-item full-width">
+                    <div class="admin-details-label">Services Offered</div>
+                    <div class="admin-details-value">{{ ngo.services }}</div>
+                </div>
+                <div class="admin-details-item full-width">
+                    <div class="admin-details-label">Description</div>
+                    <div class="admin-details-value">{{ ngo.description }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-details-section">
+            <h2>Documents</h2>
+            <div class="admin-details-grid">
+                <div class="admin-details-item">
+                    <div class="admin-details-label">Registration Certificate</div>
+                    <div class="admin-details-value">
+                        {% if registration_certificate_url %}
+                        <a href="{{ registration_certificate_url }}" target="_blank" class="document-link">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                            </svg>
+                            View Certificate
+                        </a>
+                        {% else %}
+                        <span class="text-muted">No certificate uploaded</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .admin-details {
+        max-width: 1000px;
+        margin: 2rem auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        padding: 2rem;
+    }
+
+    .admin-details-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        color: #475569;
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        background: #f1f5f9;
+        transition: all 0.2s;
+    }
+
+    .back-btn:hover {
+        background: #e2e8f0;
+        color: #1e293b;
+    }
+
+    .admin-details-header h1 {
+        font-size: 1.5rem;
+        color: #1e293b;
+        margin: 0;
+    }
+
+    .admin-actions {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .admin-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .admin-btn-primary {
+        background: #3b82f6;
+        color: white;
+    }
+
+    .admin-btn-primary:hover {
+        background: #2563eb;
+    }
+
+    .admin-btn-danger {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .admin-btn-danger:hover {
+        background: #fecaca;
+    }
+
+    .admin-details-content {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .admin-details-section {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 1.5rem;
+    }
+
+    .admin-details-section h2 {
+        font-size: 1.1rem;
+        color: #1e293b;
+        margin-bottom: 1rem;
+    }
+
+    .admin-details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .admin-details-item.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .admin-details-label {
+        font-size: 0.875rem;
+        color: #64748b;
+        margin-bottom: 0.25rem;
+    }
+
+    .admin-details-value {
+        color: #1e293b;
+        line-height: 1.5;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .status-verified {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .status-pending {
+        background: #fef9c3;
+        color: #ca8a04;
+    }
+
+    .document-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: #f1f5f9;
+        color: #475569;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+    .document-link:hover {
+        background: #e2e8f0;
+        color: #1e293b;
+    }
+
+    .text-muted {
+        color: #94a3b8;
+        font-size: 0.875rem;
+    }
+
+    .ngo-profile-image-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        border-radius: 8px;
+        background: #f8fafc;
+    }
+
+    .ngo-profile-image {
+        width: 200px;
+        height: 200px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 2px solid #e2e8f0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .ngo-profile-image-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 200px;
+        height: 200px;
+        border-radius: 8px;
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        margin: 0 auto;
+    }
+
+    @media (max-width: 640px) {
+        .admin-details {
+            margin: 1rem;
+            padding: 1rem;
+        }
+
+        .admin-details-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .admin-actions {
+            width: 100%;
+            justify-content: flex-start;
+        }
+
+        .admin-details-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}

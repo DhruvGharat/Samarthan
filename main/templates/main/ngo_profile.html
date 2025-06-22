@@ -1,0 +1,353 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}NGO Profile - {{ ngo.name }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/ngo_profile.css' %}">
+<style>
+    .registration-container {
+        width: 100vw;
+        min-height: calc(100vh - 70px);
+        padding: 2rem 5% 15px;
+        background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%);
+        position: relative;
+        margin: 0;
+        box-sizing: border-box;
+        top: -9px;
+        margin-bottom: -9px;
+    }
+
+    main {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .container {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    footer {
+        margin-top: 0 !important;
+    }
+
+    .empty-field {
+        color: #999;
+        font-style: italic;
+    }
+    
+    .view-only-label {
+        color: #333;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+    
+    .view-only-value {
+        background-color: #f9f9f9;
+        padding: 8px 12px;
+        border-radius: 4px;
+        border: 1px solid #e0e0e0;
+        margin-bottom: 15px;
+    }
+    
+    .view-only-banner {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 10px 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .disabled-checkbox {
+        color: #666;
+        cursor: not-allowed;
+    }
+    
+    input[type="checkbox"]:disabled + label {
+        opacity: 0.7;
+    }
+    
+    input[type="checkbox"]:disabled:checked + label {
+        opacity: 1;
+        font-weight: bold;
+    }
+    
+    .form-help-text {
+        color: #666;
+        font-size: 0.9rem;
+        font-style: italic;
+        margin-top: 10px;
+        background-color: #f8f9fa;
+        padding: 8px;
+        border-left: 3px solid #17a2b8;
+        border-radius: 0 4px 4px 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <h1>NGO Profile</h1>
+    
+    {% if view_only %}
+    <div class="view-only-banner">
+        You are viewing this NGO's profile in read-only mode. You cannot make changes to another NGO's profile.
+    </div>
+    {% endif %}
+    
+    {% if view_only %}
+        <!-- View Only Mode -->
+        <div class="form-section">
+            <h3 class="form-section-title">Basic Information</h3>
+            <div class="form-group">
+                <div class="view-only-label">NGO Name</div>
+                <div class="view-only-value">{{ ngo.name }}</div>
+            </div>
+            <div class="form-group">
+                <div class="view-only-label">Mission Statement</div>
+                <div class="view-only-value">{{ ngo.mission|default:"Not provided" }}</div>
+            </div>
+            <div class="form-group">
+                <div class="view-only-label">Services</div>
+                <div class="view-only-value">
+                    {% if ngo.services %}
+                        {% if 'education' in ngo.services %}Education{% endif %}
+                        {% if 'healthcare' in ngo.services %}{% if 'education' in ngo.services %}, {% endif %}Healthcare{% endif %}
+                        {% if 'environment' in ngo.services %}{% if 'education' in ngo.services or 'healthcare' in ngo.services %}, {% endif %}Environment{% endif %}
+                        {% if 'animal' in ngo.services %}{% if 'education' in ngo.services or 'healthcare' in ngo.services or 'environment' in ngo.services %}, {% endif %}Animal Welfare{% endif %}
+                        {% if 'food' in ngo.services %}{% if 'education' in ngo.services or 'healthcare' in ngo.services or 'environment' in ngo.services or 'animal' in ngo.services %}, {% endif %}Food{% endif %}
+                        {% if 'shelter' in ngo.services %}{% if 'education' in ngo.services or 'healthcare' in ngo.services or 'environment' in ngo.services or 'animal' in ngo.services or 'food' in ngo.services %}, {% endif %}Shelter{% endif %}
+                        {% if 'others' in ngo.services %}{% if 'education' in ngo.services or 'healthcare' in ngo.services or 'environment' in ngo.services or 'animal' in ngo.services or 'food' in ngo.services or 'shelter' in ngo.services %}, {% endif %}Others{% endif %}
+                    {% else %}
+                        Not specified
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3 class="form-section-title">Contact Information</h3>
+            <div class="form-group">
+                <div class="view-only-label">Contact Number</div>
+                <div class="view-only-value">{{ ngo.contact_number|default:"Not provided" }}</div>
+            </div>
+            <div class="form-group">
+                <div class="view-only-label">Official Email</div>
+                <div class="view-only-value">{{ ngo.email }}</div>
+            </div>
+            <div class="form-group">
+                <div class="view-only-label">Address</div>
+                <div class="view-only-value">{{ ngo.address|default:"Not provided" }}</div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3 class="form-section-title">Online Presence</h3>
+            <div class="form-group">
+                <div class="view-only-label">Website</div>
+                <div class="view-only-value">
+                    {% if ngo.website %}
+                        <a href="{{ ngo.website }}" target="_blank">{{ ngo.website }}</a>
+                    {% else %}
+                        Not provided
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="view-only-label">Facebook</div>
+                <div class="view-only-value">
+                    {% if ngo.facebook %}
+                        <a href="{{ ngo.facebook }}" target="_blank">{{ ngo.facebook }}</a>
+                    {% else %}
+                        Not provided
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="view-only-label">Instagram</div>
+                <div class="view-only-value">
+                    {% if ngo.instagram %}
+                        <a href="{{ ngo.instagram }}" target="_blank">{{ ngo.instagram }}</a>
+                    {% else %}
+                        Not provided
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <!-- Edit Mode -->
+        <form method="POST" enctype="multipart/form-data" class="profile-form">
+            {% csrf_token %}
+            
+            <!-- Basic Information Section -->
+            <div class="form-section">
+                <h3 class="form-section-title">Basic Information</h3>
+                <div class="form-group">
+                    <label for="ngo_name">NGO Name</label>
+                    <input type="text" id="ngo_name" name="ngo_name" value="{{ ngo.name|default:'' }}" readonly>
+                    <p class="form-help-text">NGO name cannot be changed. Please contact support if you need to update this.</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="mission">Mission Statement</label>
+                    <textarea id="mission" name="mission" rows="3" readonly>{{ ngo.mission|default:'' }}</textarea>
+                    <p class="form-help-text">Mission statement cannot be changed. Please contact support if you need to update this.</p>
+                </div>
+            </div>
+            
+            <!-- Contact Information Section -->
+            <div class="form-section">
+                <h3 class="form-section-title">Contact Information</h3>
+                
+                <div class="form-group">
+                    <label for="contact_number">Contact Number</label>
+                    <input type="tel" id="contact_number" name="contact_number" value="{{ ngo.contact_number|default:'' }}">
+                    {% if not ngo.contact_number %}<span class="empty-field">Not provided</span>{% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Official Email</label>
+                    <input type="email" id="email" name="email" value="{{ ngo.email|default:'' }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <textarea id="address" name="address" rows="3">{{ ngo.address|default:'' }}</textarea>
+                    {% if not ngo.address %}<span class="empty-field">Not provided</span>{% endif %}
+                </div>
+            </div>
+            
+            <!-- Website Section -->
+            <div class="form-section">
+                <h3 class="form-section-title">Website</h3>
+                <div class="form-group">
+                    <label for="website">Website</label>
+                    <input type="url" id="website" name="website" placeholder="https://www.yourwebsite.org" value="{{ ngo.website|default:'' }}">
+                    {% if not ngo.website %}<span class="empty-field">Not provided</span>{% endif %}
+                </div>
+            </div>
+            
+            <!-- Services Section -->
+            <div class="form-section">
+                <h3 class="form-section-title">Services Offered</h3>
+                <p class="form-section-description">Your NGO's registered services (read-only):</p>
+                <input type="hidden" name="services" value="{{ ngo.services }}">
+                <div class="services-checkboxes">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="education" value="education" {% if ngo.services and 'education' in ngo.services %}checked{% endif %} disabled>
+                        <label for="education" class="disabled-checkbox">Education</label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="healthcare" value="healthcare" {% if ngo.services and 'healthcare' in ngo.services %}checked{% endif %} disabled>
+                        <label for="healthcare" class="disabled-checkbox">Healthcare</label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="environment" value="environment" {% if ngo.services and 'environment' in ngo.services %}checked{% endif %} disabled>
+                        <label for="environment" class="disabled-checkbox">Environment</label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="animal" value="animal" {% if ngo.services and 'animal' in ngo.services %}checked{% endif %} disabled>
+                        <label for="animal" class="disabled-checkbox">Animal Welfare</label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="food" value="food" {% if ngo.services and 'food' in ngo.services %}checked{% endif %} disabled>
+                        <label for="food" class="disabled-checkbox">Food</label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="shelter" value="shelter" {% if ngo.services and 'shelter' in ngo.services %}checked{% endif %} disabled>
+                        <label for="shelter" class="disabled-checkbox">Shelter</label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="others" value="others" {% if ngo.services and 'others' in ngo.services %}checked{% endif %} disabled>
+                        <label for="others" class="disabled-checkbox">Others</label>
+                    </div>
+                </div>
+                <p class="form-help-text">To change your NGO's services, please contact support.</p>
+            </div>
+            
+            <!-- Banking Information Section -->
+            <div class="form-section">
+                <h3 class="form-section-title">Banking Details</h3>
+                <div class="form-group">
+                    <label for="bank_name">Bank Name</label>
+                    <input type="text" id="bank_name" name="bank_name" value="{{ ngo.bank_name|default:'' }}" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="account_number">Account Number</label>
+                    <input type="text" id="account_number" name="account_number" value="{{ ngo.account_number|default:'' }}" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ifsc_code">IFSC Code</label>
+                    <input type="text" id="ifsc_code" name="ifsc_code" value="{{ ngo.ifsc_code|default:'' }}" readonly>
+                </div>
+            </div>
+            
+            <!-- Social Media Section -->
+            <div class="social-media-section">
+                <h3 class="form-section-title">Social Media Presence</h3>
+                <div class="form-group">
+                    <label for="facebook">Facebook</label>
+                    <input type="url" id="facebook" name="facebook" placeholder="Facebook page URL" value="{{ ngo.facebook|default:'' }}">
+                    {% if not ngo.facebook %}<span class="empty-field">Not provided</span>{% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="instagram">Instagram</label>
+                    <input type="url" id="instagram" name="instagram" placeholder="Instagram profile URL" value="{{ ngo.instagram|default:'' }}">
+                    {% if not ngo.instagram %}<span class="empty-field">Not provided</span>{% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="other_social">Other Social Media</label>
+                    <input type="url" id="other_social" name="other_social" placeholder="Other social media URL" value="{{ ngo.other_social|default:'' }}">
+                    {% if not ngo.other_social %}<span class="empty-field">Not provided</span>{% endif %}
+                </div>
+            </div>
+            
+            <!-- Documents Upload Section -->
+            <div class="upload-section">
+                <h3 class="form-section-title">Supporting Documents</h3>
+                <p class="upload-info">Please upload relevant picture (logo, profile picture)</p>
+                
+                <div class="upload-btn-wrapper">
+                    <button class="upload-btn" type="button">Choose File</button>
+                    <input type="file" name="documents" accept="image/*" id="document-upload">
+                    <span class="file-name">{% if ngo.documents %}{{ ngo.documents.name }}{% else %}<span class="empty-field">No file chosen</span>{% endif %}</span>
+                </div>
+            </div>
+            
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="submit" class="btn-save">Save Profile</button>
+                <button type="button" class="btn-cancel">Cancel</button>
+            </div>
+        </form>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('document-upload');
+    const fileNameDisplay = fileInput.nextElementSibling;
+    
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            fileNameDisplay.textContent = file.name;
+        }
+    });
+});
+</script>
+{% endblock %}

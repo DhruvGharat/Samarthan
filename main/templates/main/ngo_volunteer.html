@@ -1,0 +1,526 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}SAMARTHAN - Volunteer Management{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/ngo_volunteer.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="volunteer-dashboard">
+    <!-- Header Section -->
+    <div class="dashboard-header">
+        <div class="header-content">
+            <div class="header-title">
+                <div class="header-icon">
+                    <i class="fas fa-users-cog"></i>
+                </div>
+                <div>
+                    <h1>Volunteer Management</h1>
+                    <p>Manage your volunteers and volunteer applications</p>
+                </div>
+            </div>
+        </div>
+        <div class="header-stats">
+            <div class="stat-card pending">
+                <div class="stat-icon">
+                    <i class="fas fa-user-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-number">{{ pending_volunteers.count }}</span>
+                    <span class="stat-label">Pending Applications</span>
+                </div>
+                <div class="stat-decoration"></div>
+            </div>
+            <div class="stat-card active">
+                <div class="stat-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-number">{{ active_volunteers.count }}</span>
+                    <span class="stat-label">Active Volunteers</span>
+                </div>
+                <div class="stat-decoration"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="dashboard-content">
+        <!-- Pending Applications Section -->
+        <section class="volunteer-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <div class="section-icon">
+                        <i class="fas fa-user-clock"></i>
+                    </div>
+                    <div>
+                        <h2>Pending Applications</h2>
+                        <p>Review and manage new volunteer applications</p>
+                    </div>
+                </div>
+                <div class="section-actions">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search volunteers...">
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn-filter" id="filterPending">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <button class="btn-export" id="exportPending">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <div class="table-container">
+                    <table class="volunteer-table">
+                        <thead>
+                            <tr>
+                                <th class="col-name">Name</th>
+                                <th class="col-contact">Contact</th>
+                                <th class="col-email">Email</th>
+                                <th class="col-address">Address</th>
+                                <th class="col-days">Preferred Days</th>
+                                <th class="col-time">Time Slot</th>
+                                <th class="col-date">Application Date</th>
+                                <th class="col-actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for volunteer in pending_volunteers %}
+                            <tr>
+                                <td class="col-name">
+                                    <div class="volunteer-info">
+                                        <div class="volunteer-avatar">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div class="volunteer-details">
+                                            <span class="volunteer-name">{{ volunteer.name }}</span>
+                                            <span class="volunteer-id">#{{ volunteer.id }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="col-contact">
+                                    <div class="contact-info">
+                                        <i class="fas fa-phone"></i>
+                                        <span>{{ volunteer.contact }}</span>
+                                    </div>
+                                </td>
+                                <td class="col-email">
+                                    <div class="email-info">
+                                        <i class="fas fa-envelope"></i>
+                                        <span>{{ volunteer.contact }}</span>
+                                    </div>
+                                </td>
+                                <td class="col-address">
+                                    <div class="address-cell">
+                                        <div class="address-info">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <span class="address-text">{{ volunteer.address }}</span>
+                                        </div>
+                                        <button class="btn-view-map" title="View on Map">
+                                            <i class="fas fa-map"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td class="col-days">
+                                    <div class="days-container">
+                                        {% for day in volunteer.preferred_days %}
+                                        <span class="day-tag">{{ day }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                                <td class="col-time">
+                                    <span class="time-slot">
+                                        <i class="fas fa-clock"></i>
+                                        {{ volunteer.get_preferred_time_display }}
+                                    </span>
+                                </td>
+                                <td class="col-date">
+                                    <span class="date-info">
+                                        <i class="fas fa-calendar"></i>
+                                        {{ volunteer.created_at|date:"M d, Y" }}
+                                    </span>
+                                </td>
+                                <td class="col-actions">
+                                    <div class="action-buttons">
+                                        <form method="post" action="{% url 'update_volunteer_status' volunteer.id %}" style="display: inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="status" value="approved">
+                                            <button type="submit" class="btn-accept" title="Accept Volunteer">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        </form>
+                                        <form method="post" action="{% url 'update_volunteer_status' volunteer.id %}" style="display: inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="status" value="rejected">
+                                            <button type="submit" class="btn-reject" title="Reject Application">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="no-data">
+                                    <div class="empty-state">
+                                        <i class="fas fa-user-clock"></i>
+                                        <p>No pending applications</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Active Volunteers Section -->
+        <section class="volunteer-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <div class="section-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div>
+                        <h2>Active Volunteers</h2>
+                        <p>Manage your current volunteer team</p>
+                    </div>
+                </div>
+                <div class="section-actions">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search volunteers...">
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn-filter" id="filterActive">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <button class="btn-export" id="exportActive">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <div class="table-container">
+                    <table class="volunteer-table">
+                        <thead>
+                            <tr>
+                                <th class="col-name">Name</th>
+                                <th class="col-contact">Contact</th>
+                                <th class="col-email">Email</th>
+                                <th class="col-address">Address</th>
+                                <th class="col-days">Preferred Days</th>
+                                <th class="col-time">Time Slot</th>
+                                <th class="col-date">Join Date</th>
+                                <th class="col-actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for volunteer in active_volunteers %}
+                            <tr>
+                                <td class="col-name">
+                                    <div class="volunteer-info">
+                                        <div class="volunteer-avatar">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div class="volunteer-details">
+                                            <span class="volunteer-name">{{ volunteer.name }}</span>
+                                            <span class="volunteer-id">#{{ volunteer.id }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="col-contact">
+                                    <div class="contact-info">
+                                        <i class="fas fa-phone"></i>
+                                        <span>{{ volunteer.contact }}</span>
+                                    </div>
+                                </td>
+                                <td class="col-email">
+                                    <div class="email-info">
+                                        <i class="fas fa-envelope"></i>
+                                        <span>{{ volunteer.contact }}</span>
+                                    </div>
+                                </td>
+                                <td class="col-address">
+                                    <div class="address-cell">
+                                        <div class="address-info">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <span class="address-text">{{ volunteer.address }}</span>
+                                        </div>
+                                        <button class="btn-view-map" title="View on Map">
+                                            <i class="fas fa-map"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td class="col-days">
+                                    <div class="days-container">
+                                        {% for day in volunteer.preferred_days %}
+                                        <span class="day-tag">{{ day }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                                <td class="col-time">
+                                    <span class="time-slot">
+                                        <i class="fas fa-clock"></i>
+                                        {{ volunteer.get_preferred_time_display }}
+                                    </span>
+                                </td>
+                                <td class="col-date">
+                                    <span class="date-info">
+                                        <i class="fas fa-calendar"></i>
+                                        {{ volunteer.created_at|date:"M d, Y" }}
+                                    </span>
+                                </td>
+                                <td class="col-actions">
+                                    <div class="action-buttons">
+                                        <form method="post" action="{% url 'update_volunteer_status' volunteer.id %}" style="display: inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="status" value="rejected">
+                                            <button type="submit" class="btn-remove" title="Remove Volunteer">
+                                                <i class="fas fa-user-minus"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="8" class="no-data">
+                                    <div class="empty-state">
+                                        <i class="fas fa-users"></i>
+                                        <p>No active volunteers</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<!-- Filter Modal -->
+<div class="modal" id="filterModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title">
+                <div class="modal-icon">
+                    <i class="fas fa-filter"></i>
+                </div>
+                <div>
+                    <h3>Filter Volunteers</h3>
+                    <p>Customize your volunteer list view</p>
+                </div>
+            </div>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="filterForm">
+                <div class="form-group">
+                    <label><i class="fas fa-clock"></i> Time Slot</label>
+                    <select name="timeSlot">
+                        <option value="">All</option>
+                        <option value="morning">Morning</option>
+                        <option value="afternoon">Afternoon</option>
+                        <option value="evening">Evening</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-calendar"></i> Preferred Days</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="days" value="monday"> Monday</label>
+                        <label><input type="checkbox" name="days" value="tuesday"> Tuesday</label>
+                        <label><input type="checkbox" name="days" value="wednesday"> Wednesday</label>
+                        <label><input type="checkbox" name="days" value="thursday"> Thursday</label>
+                        <label><input type="checkbox" name="days" value="friday"> Friday</label>
+                        <label><input type="checkbox" name="days" value="saturday"> Saturday</label>
+                        <label><input type="checkbox" name="days" value="sunday"> Sunday</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-calendar-alt"></i> Date Range</label>
+                    <div class="date-range">
+                        <input type="date" name="startDate">
+                        <span>to</span>
+                        <input type="date" name="endDate">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn-apply">
+                        <i class="fas fa-check"></i> Apply Filters
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Modal functionality
+    const modals = document.querySelectorAll('.modal');
+    const filterButtons = document.querySelectorAll('.btn-filter');
+    const closeButtons = document.querySelectorAll('.close-modal, .btn-cancel');
+    let activeFilterSection = null; // Track which section is being filtered
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const modal = document.getElementById('filterModal');
+            // Determine which section is being filtered
+            activeFilterSection = button.id === 'filterPending' ? 'pending' : 'active';
+            modal.style.display = 'block';
+        });
+    });
+
+    closeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const modal = document.getElementById('filterModal');
+            modal.style.display = 'none';
+        });
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+        }
+    });
+
+    // Filter form submission
+    const filterForm = document.getElementById('filterForm');
+    filterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get filter values
+        const timeSlot = filterForm.querySelector('select[name="timeSlot"]').value;
+        const selectedDays = Array.from(filterForm.querySelectorAll('input[name="days"]:checked')).map(cb => cb.value);
+        const startDate = filterForm.querySelector('input[name="startDate"]').value;
+        const endDate = filterForm.querySelector('input[name="endDate"]').value;
+        
+        // Determine which table to filter
+        const tableSection = activeFilterSection === 'pending' ? 
+            document.querySelector('.volunteer-section:first-of-type .volunteer-table') : 
+            document.querySelector('.volunteer-section:last-of-type .volunteer-table');
+        
+        if (!tableSection) return;
+        
+        const rows = tableSection.querySelectorAll('tbody tr');
+        
+        // Filter rows
+        rows.forEach(row => {
+            // Skip empty state rows
+            if (row.querySelector('.no-data')) {
+                return;
+            }
+            
+            let showRow = true;
+            
+            // Filter by time slot
+            if (timeSlot && showRow) {
+                const rowTimeSlot = row.querySelector('.time-slot').textContent.trim().toLowerCase();
+                if (!rowTimeSlot.includes(timeSlot.toLowerCase())) {
+                    showRow = false;
+                }
+            }
+            
+            // Filter by preferred days
+            if (selectedDays.length > 0 && showRow) {
+                const dayTags = Array.from(row.querySelectorAll('.day-tag')).map(tag => tag.textContent.trim().toLowerCase());
+                // Check if any of the selected days match the row's days
+                const hasMatchingDay = selectedDays.some(day => 
+                    dayTags.some(tag => tag.includes(day.toLowerCase()))
+                );
+                
+                if (!hasMatchingDay) {
+                    showRow = false;
+                }
+            }
+            
+            // Filter by date range
+            if ((startDate || endDate) && showRow) {
+                const dateCell = row.querySelector('.date-info').textContent.trim();
+                const rowDate = new Date(dateCell);
+                
+                if (startDate && new Date(startDate) > rowDate) {
+                    showRow = false;
+                }
+                
+                if (endDate && new Date(endDate) < rowDate) {
+                    showRow = false;
+                }
+            }
+            
+            // Show or hide row
+            row.style.display = showRow ? '' : 'none';
+        });
+        
+        // Close the modal after applying filters
+        document.getElementById('filterModal').style.display = 'none';
+    });
+    
+    // Reset filters button
+    const resetButton = document.createElement('button');
+    resetButton.type = 'button';
+    resetButton.className = 'btn-reset';
+    resetButton.innerHTML = '<i class="fas fa-undo"></i> Reset Filters';
+    resetButton.addEventListener('click', function() {
+        // Reset the form
+        filterForm.reset();
+        
+        // Show all rows in both tables
+        document.querySelectorAll('.volunteer-table tbody tr').forEach(row => {
+            row.style.display = '';
+        });
+    });
+    
+    // Add reset button to form actions
+    const formActions = document.querySelector('.form-actions');
+    formActions.insertBefore(resetButton, formActions.firstChild);
+
+    // Export functionality
+    const exportButtons = document.querySelectorAll('.btn-export');
+    exportButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Add export functionality here
+            alert('Export functionality will be implemented soon!');
+        });
+    });
+
+    // Search functionality
+    const searchInputs = document.querySelectorAll('.search-box input');
+    searchInputs.forEach(input => {
+        input.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const table = e.target.closest('.volunteer-section').querySelector('table');
+            const rows = table.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                // Skip empty state rows
+                if (row.querySelector('.no-data')) {
+                    return;
+                }
+                
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    });
+});
+</script>
+{% endblock %} 

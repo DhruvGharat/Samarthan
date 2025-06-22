@@ -1,0 +1,180 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}SAMARTHAN - About Us{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/about.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+    .about-section {
+        padding: 0;
+        background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%);
+        min-height: calc(100vh - 70px);
+        width: 100vw;
+        margin: 0;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        top: -9px;
+        margin-bottom: -9px;
+    }
+
+    .about-content {
+        width: 100%;
+        padding: 2rem 5% 15px;
+        box-sizing: border-box;
+        flex: 1;
+    }
+
+    .about-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding: 2rem 5% 0;
+    }
+
+    .about-header h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+        justify-content: center;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .team-member img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 1rem;
+    }
+
+    .team-member h3 {
+        margin-bottom: 0.3rem;
+        color: var(--primary-color);
+        font-size: 1.3rem;
+    }
+
+    .team-member p {
+        color: var(--text-color);
+        font-size: 1rem;
+    }
+
+    @media (max-width: 1024px) {
+        .team-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 576px) {
+        .team-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .about-section {
+            padding: 0;
+        }
+        .about-content {
+            padding: 1rem 1rem;
+        }
+        .about-header {
+            padding: 1rem 1rem 0;
+        }
+    }
+
+    main {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .container {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .about-team {
+        margin-bottom: 0;
+        padding-bottom: 15px;
+    }
+
+    footer {
+        margin-top: 0 !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="about-section">
+    <div class="about-header">
+        <h1>About {{ ngo.name|default:"Our NGO" }}</h1>
+        <p>{{ ngo.mission|default:"Empowering change through transparent and impactful donations" }}</p>
+    </div>
+    
+    <div class="about-content">
+        <div class="about-mission">
+            <h2>Our Mission</h2>
+            <p>{{ ngo.mission|default:"SAMARTHAN aims to bridge the gap between donors and NGOs, creating a transparent and efficient platform for making impactful donations. We believe in empowering both donors and NGOs to create meaningful change in society." }}</p>
+        </div>
+        
+        <div class="about-vision">
+            <h2>Our Vision</h2>
+            <p>We envision a world where every donation creates maximum impact, where NGOs have the resources they need, and where donors can easily track and see the difference they're making.</p>
+        </div>
+        
+        <div class="about-team">
+            <h2>Our Team</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <img src="{% static 'images/Dhruv.jpg' %}" alt="Dhruv Gharat">
+                    <h3>Dhruv Gharat</h3>
+                    <p>Frontend Developer & Planning Coordinator</p>
+                    <div class="social-icons">
+                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="www.linkedin.com/in/dhruv-gharat-296b95280" ><i class="fab fa-linkedin"></i></a>
+                        <a href="mailto:dhruvgharar136@example.com"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <img src="{% static 'images/Prince.jpg' %}" alt="Prince Panchal">
+                    <h3>Prince Panchal</h3>
+                    <p>Technical Documentation Manager</p>
+                    <div class="social-icons">
+                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="mailto:prince@example.com"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/final_project.png-NM3pLG7T9vyP1wpQDAg2SXcl0MqEGh.jpeg" alt="Madhura Tandel">
+                    <h3>Madhura Tandel</h3>
+                    <p>UI/UX Designer</p>
+                    <div class="social-icons">
+                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="mailto:madhuratandel9@gmail.com"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <img src="{% static 'images/bhumikaimg.png' %}" alt="Bhumika Bhoir">
+                    <h3>Bhumika Bhoir</h3>
+                    <p>Backend Developer</p>
+                    <div class="social-icons">
+                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="mailto:bhoirbhumika56@gmail.com"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 

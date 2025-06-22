@@ -1,0 +1,205 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}SAMARTHAN - Contact Us{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<style>
+    .contact-section {
+        width: 100vw;
+        min-height: calc(100vh - 70px);
+        padding: 2rem 5% 15px;
+        background: linear-gradient(135deg, var(--light-gray) 0%, #ffffff 100%);
+        position: relative;
+        margin: 0;
+        box-sizing: border-box;
+        top: -9px;
+    }
+
+    .contact-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .contact-header h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+    }
+
+    .contact-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .contact-form-container {
+        width: 100%;
+    }
+
+    .contact-form {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+
+    .form-group textarea {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    button.btn {
+        background: var(--primary-color);
+        color: white;
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    button.btn:hover {
+        background: var(--secondary-color);
+    }
+
+    main {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .container {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .contact-info {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid #eee;
+    }
+
+    .info-item {
+        margin-bottom: 1.5rem;
+    }
+
+    .info-item h3 {
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem;
+    }
+
+    .info-item p {
+        color: #666;
+        line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+        .contact-section {
+            padding: 1rem;
+        }
+        .contact-content {
+            padding: 1rem;
+        }
+        .contact-header h1 {
+            font-size: 2rem;
+        }
+    }
+
+    /* Fix footer newsletter form */
+    .footer-newsletter input[type="email"] {
+        width: 200px;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .footer-newsletter .btn {
+        padding: 8px 16px;
+        width: auto;
+        font-size: 14px;
+        border-radius: 4px;
+    }
+
+    .newsletter-form {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    /* Override any form styles that might affect the footer */
+    .footer-container .form-group input,
+    .footer-container button {
+        width: auto;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="contact-section">
+    <div class="contact-header">
+        <h1>Contact {{ ngo.name }}</h1>
+        <p>Have questions or want to know more about our work? We'd love to hear from you.</p>
+    </div>
+    
+    <div class="contact-content">
+        <div class="contact-form-container">
+            <h2>Send us a message</h2>
+            <form method="post" action="{% url 'ngo_contact' %}" class="contact-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Your Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="subject" placeholder="Subject" required>
+                </div>
+                <div class="form-group">
+                    <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn">Send Message</button>
+            </form>
+        </div>
+        
+        <div class="contact-info">
+            <h2>Contact Information</h2>
+            <div class="info-item">
+                <h3>Address</h3>
+                <p>2RWR+3MM, Opposite S.L.Raheja Hospital, Mahim Causeway, Mahim (West), Raheja Hospital Marg, Mumbai, Maharashtra 400016</p>
+            </div>
+            <div class="info-item">
+                <h3>Email</h3>
+                <p>office@xavier.ac.in</p>
+            </div>
+            <div class="info-item">
+                <h3>Phone</h3>
+                <p>+91 7249371505 / 9920407274</p>
+            </div>
+            <div class="info-item">
+                <h3>Working Hours</h3>
+                <p>Monday - Friday: 9:00 AM - 5:00 PM</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 

@@ -1,0 +1,176 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Terms and Conditions - SAMARTHAN{% endblock %}
+
+{% block extra_css %}
+<style>
+    .terms-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .terms-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .terms-header h1 {
+        color: var(--primary-color);
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .terms-header p {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .terms-section {
+        margin-bottom: 2.5rem;
+    }
+
+    .terms-section h2 {
+        color: var(--secondary-color);
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--primary-color);
+    }
+
+    .terms-section p {
+        color: #444;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .terms-section ul {
+        list-style-type: disc;
+        margin-left: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .terms-section li {
+        color: #444;
+        line-height: 1.6;
+        margin-bottom: 0.5rem;
+    }
+
+    .last-updated {
+        text-align: right;
+        color: #666;
+        font-style: italic;
+        margin-top: 3rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="terms-container">
+    <div class="terms-header">
+        <h1>Terms and Conditions</h1>
+        <p>Welcome to SAMARTHAN. Please read these terms carefully before using our platform.</p>
+    </div>
+
+    <div class="terms-section">
+        <h2>1. Acceptance of Terms</h2>
+        <p>By accessing and using SAMARTHAN's platform, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use our services.</p>
+    </div>
+
+    <div class="terms-section">
+        <h2>2. NGO Registration Requirements</h2>
+        <p>For NGOs to register on our platform:</p>
+        <ul>
+            <li>NGOs must be legally registered in India and provide valid registration documentation</li>
+            <li>NGOs must be pre-registered in our system before creating an account</li>
+            <li>All information provided must be accurate and up-to-date</li>
+            <li>NGOs must maintain transparency in their operations and fund utilization</li>
+            <li>Registration certificates and other documents must be valid and verifiable</li>
+            <li>Bank account details must be accurate for donation processing</li>
+        </ul>
+    </div>
+
+    <div class="terms-section">
+        <h2>3. Donor Responsibilities</h2>
+        <p>As a donor using our platform:</p>
+        <ul>
+            <li>You must provide accurate personal and payment information</li>
+            <li>You agree that donations are voluntary and non-refundable</li>
+            <li>You understand that donation receipts will be generated for your records</li>
+            <li>You are responsible for maintaining the confidentiality of your account</li>
+            <li>You agree to make donations only through the platform's secure payment system</li>
+        </ul>
+    </div>
+
+    <div class="terms-section">
+        <h2>4. Volunteer Engagement</h2>
+        <p>For volunteer activities:</p>
+        <ul>
+            <li>Volunteers must register with accurate personal information</li>
+            <li>Volunteer applications are subject to approval by the respective NGOs</li>
+            <li>Time commitments and schedules must be honored as agreed upon</li>
+            <li>NGOs have the right to accept or reject volunteer applications</li>
+            <li>Volunteers must adhere to the NGO's guidelines and code of conduct</li>
+        </ul>
+    </div>
+
+    <div class="terms-section">
+        <h2>5. Financial Transactions</h2>
+        <p>Regarding donations and financial matters:</p>
+        <ul>
+            <li>All transactions are processed through secure banking channels</li>
+            <li>SAMARTHAN does not store sensitive banking information</li>
+            <li>NGOs are responsible for maintaining accurate financial records</li>
+            <li>Donation receipts are automatically generated for each transaction</li>
+            <li>Users are responsible for any applicable taxes on donations</li>
+        </ul>
+    </div>
+
+    <div class="terms-section">
+        <h2>6. Platform Usage</h2>
+        <p>Users of SAMARTHAN agree to:</p>
+        <ul>
+            <li>Not use the platform for any illegal or unauthorized purpose</li>
+            <li>Not interfere with the platform's security features</li>
+            <li>Not attempt to access data not intended for you</li>
+            <li>Respect other users and their privacy</li>
+            <li>Not misuse the donation or volunteer registration systems</li>
+        </ul>
+    </div>
+
+    <div class="terms-section">
+        <h2>7. Content Guidelines</h2>
+        <p>When using our platform:</p>
+        <ul>
+            <li>NGOs must provide accurate descriptions of their work and missions</li>
+            <li>Content must not violate any laws or regulations</li>
+            <li>Photos and documents uploaded must be authentic</li>
+            <li>Misleading or false information is strictly prohibited</li>
+        </ul>
+    </div>
+
+    <div class="terms-section">
+        <h2>8. Termination of Services</h2>
+        <p>SAMARTHAN reserves the right to:</p>
+        <ul>
+            <li>Suspend or terminate accounts that violate these terms</li>
+            <li>Remove content that violates our policies</li>
+            <li>Block access to users who misuse the platform</li>
+            <li>Investigate suspicious or fraudulent activities</li>
+        </ul>
+    </div>
+
+    <div class="terms-section">
+        <h2>9. Contact Information</h2>
+        <p>For any questions or concerns regarding these terms, please contact us through our website or at samarthan1313@gmail.com.</p>
+    </div>
+
+    <div class="last-updated">
+        Last updated: March 2024
+    </div>
+</div>
+{% endblock %} 

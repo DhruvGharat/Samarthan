@@ -1,0 +1,449 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="volunteer-registration-container">
+    <div class="volunteer-form-header">
+        <i class="fas fa-hands-helping"></i>
+        <h2>Volunteer Registration</h2>
+        <p>Join us in making a difference! Please fill out the form below to register as a volunteer.</p>
+    </div>
+    
+    <form id="volunteerForm" method="post" action="{% url 'register_volunteer' %}" onsubmit="return validateVolunteerForm()">
+        {% csrf_token %}
+        
+        <div class="form-section personal-info">
+            <h3><i class="fas fa-user"></i> Personal Information</h3>
+            <div class="form-group">
+                <label for="name">Full Name <span class="required">*</span></label>
+                <input type="text" id="name" name="name" required 
+                       placeholder="Enter your full name"
+                       pattern="[A-Za-z\s]{2,50}"
+                       title="Name should only contain letters and spaces, between 2 and 50 characters">
+            </div>
+            
+            <div class="form-group">
+                <label for="contact">Contact Number <span class="required">*</span></label>
+                <input type="tel" id="contact" name="contact" required 
+                       placeholder="Enter your contact number"
+                       pattern="[0-9]{10}"
+                       title="Please enter a valid 10-digit phone number">
+                <small class="form-help">Enter a 10-digit mobile number</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="address">Address <span class="required">*</span></label>
+                <textarea id="address" name="address" required 
+                        placeholder="Enter your complete address"
+                        rows="3"></textarea>
+            </div>
+        </div>
+
+        <div class="form-section availability">
+            <h3><i class="fas fa-calendar-alt"></i> Availability</h3>
+            <div class="form-group days-selection">
+                <label>Preferred Days <span class="required">*</span></label>
+                <div class="checkbox-group">
+                    <div class="day-checkbox">
+                        <input type="checkbox" id="monday" name="days[]" value="Monday">
+                        <label for="monday">Monday</label>
+                    </div>
+                    <div class="day-checkbox">
+                        <input type="checkbox" id="tuesday" name="days[]" value="Tuesday">
+                        <label for="tuesday">Tuesday</label>
+                    </div>
+                    <div class="day-checkbox">
+                        <input type="checkbox" id="wednesday" name="days[]" value="Wednesday">
+                        <label for="wednesday">Wednesday</label>
+                    </div>
+                    <div class="day-checkbox">
+                        <input type="checkbox" id="thursday" name="days[]" value="Thursday">
+                        <label for="thursday">Thursday</label>
+                    </div>
+                    <div class="day-checkbox">
+                        <input type="checkbox" id="friday" name="days[]" value="Friday">
+                        <label for="friday">Friday</label>
+                    </div>
+                    <div class="day-checkbox">
+                        <input type="checkbox" id="saturday" name="days[]" value="Saturday">
+                        <label for="saturday">Saturday</label>
+                    </div>
+                    <div class="day-checkbox">
+                        <input type="checkbox" id="sunday" name="days[]" value="Sunday">
+                        <label for="sunday">Sunday</label>
+                    </div>
+                </div>
+                <small class="form-help">Select at least one day</small>
+            </div>
+
+            <div class="form-group">
+                <label for="timeSlot">Preferred Time Slot <span class="required">*</span></label>
+                <select id="timeSlot" name="timeSlot" required>
+                    <option value="">Select a time slot</option>
+                    <option value="morning">Morning (9 AM - 12 PM)</option>
+                    <option value="afternoon">Afternoon (12 PM - 4 PM)</option>
+                    <option value="evening">Evening (4 PM - 7 PM)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-section ngo-selection">
+            <h3><i class="fas fa-building"></i> Select NGO</h3>
+            <p class="section-description">Choose an NGO you'd like to volunteer with from the list below:</p>
+            <div class="table-container">
+                <table class="ngo-table">
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>NGO Name</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Address</th>
+                            <th>Contact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if ngos %}
+                            {% for ngo in ngos %}
+                            <tr class="ngo-row" onclick="selectNGO(this)">
+                                <td>
+                                    <input type="radio" id="ngo_{{ ngo.id }}" name="selected_ngo" value="{{ ngo.id }}" required>
+                                </td>
+                                <td>{{ ngo.name }}</td>
+                                <td><span class="category-badge">{{ ngo.services }}</span></td>
+                                <td>
+                                    <span class="ngo-description" title="{{ ngo.description }}">
+                                        {{ ngo.description|truncatechars:50 }}
+                                    </span>
+                                </td>
+                                <td>{{ ngo.address }}</td>
+                                <td>
+                                    <div class="contact-info">
+                                        <div>{{ ngo.contact_number }}</div>
+                                        <div class="email">{{ ngo.email }}</div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="no-ngos-message">
+                                    <i class="fas fa-info-circle"></i>
+                                    No verified NGOs available at the moment. Please check back later.
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a href="{% url 'donation_tracking' %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary submit-btn">
+                <i class="fas fa-paper-plane"></i> Submit Application
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+/* Volunteer Registration Styles */
+.volunteer-registration-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.volunteer-form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+.volunteer-form-header i {
+    font-size: 2.5rem;
+    color: #879957;
+    margin-bottom: 1rem;
+}
+
+.volunteer-form-header h2 {
+    margin: 0.5rem 0;
+    color: #2c3e50;
+}
+
+.volunteer-form-header p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.form-section {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+
+.form-section h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-section h3 i {
+    color: #879957;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.required {
+    color: #e74c3c;
+    margin-left: 3px;
+}
+
+.form-help {
+    display: block;
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="tel"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #879957;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(135, 153, 87, 0.1);
+}
+
+.days-selection .checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.day-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.day-checkbox:hover {
+    background: #f0f2f5;
+}
+
+.day-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.ngo-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.ngo-table th {
+    background: #879957;
+    color: white;
+    padding: 1rem;
+    text-align: left;
+}
+
+.ngo-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.ngo-row {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.ngo-row:hover {
+    background-color: #f5f8ff;
+}
+
+.ngo-row.selected {
+    background-color: #e9f5ff;
+}
+
+.category-badge {
+    background: #879957;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.9rem;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    color: white;
+}
+
+.submit-btn {
+    background: #879957;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: #6a7a44;
+    transform: translateY(-2px);
+}
+
+.submit-btn i {
+    font-size: 1.1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .volunteer-registration-container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+
+    .days-selection .checkbox-group {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions button,
+    .form-actions a {
+        width: 100%;
+    }
+
+    .ngo-table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+</style>
+
+<script>
+function validateVolunteerForm() {
+    // Validate name
+    const name = document.getElementById('name').value;
+    if (!/^[A-Za-z\s]{2,50}$/.test(name)) {
+        alert('Please enter a valid name (2-50 characters, letters only)');
+        return false;
+    }
+
+    // Validate contact number
+    const contact = document.getElementById('contact').value;
+    if (!/^[0-9]{10}$/.test(contact)) {
+        alert('Please enter a valid 10-digit contact number');
+        return false;
+    }
+
+    // Validate address
+    const address = document.getElementById('address').value;
+    if (address.trim().length < 10) {
+        alert('Please enter a complete address (minimum 10 characters)');
+        return false;
+    }
+
+    // Validate days selection
+    const days = document.querySelectorAll('input[name="days[]"]:checked');
+    if (days.length === 0) {
+        alert('Please select at least one preferred day');
+        return false;
+    }
+
+    // Validate time slot
+    const timeSlot = document.getElementById('timeSlot').value;
+    if (!timeSlot) {
+        alert('Please select a preferred time slot');
+        return false;
+    }
+
+    // Validate NGO selection
+    const ngo = document.querySelector('input[name="selected_ngo"]:checked');
+    if (!ngo) {
+        alert('Please select an NGO to volunteer with');
+        return false;
+    }
+
+    return true;
+}
+
+function selectNGO(row) {
+    // Remove selected class from all rows
+    document.querySelectorAll('.ngo-row').forEach(r => r.classList.remove('selected'));
+    
+    // Add selected class to clicked row
+    row.classList.add('selected');
+    
+    // Check the radio button
+    const radio = row.querySelector('input[type="radio"]');
+    radio.checked = true;
+}
+</script>
+{% endblock %} 

@@ -1,0 +1,708 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}SAMARTHAN - {{ ngo.name }} Details{% endblock %}
+
+{% block extra_css %}
+<style>
+    .ngo-details-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .ngo-header {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 2rem;
+        margin-bottom: 3rem;
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .ngo-image-section {
+        position: relative;
+    }
+
+    .ngo-image {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .ngo-category-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: var(--primary-color);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+    }
+
+    .ngo-info-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .ngo-name {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .ngo-mission {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+
+    .ngo-contact-info {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.8rem;
+        background: var(--background-light);
+        border-radius: 8px;
+    }
+
+    .contact-item i {
+        color: var(--primary-color);
+        font-size: 1.2rem;
+    }
+
+    .ngo-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: auto;
+    }
+
+    .donate-btn, .contact-btn {
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .donate-btn {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .contact-btn {
+        background: var(--secondary-color);
+        color: white;
+    }
+
+    .donate-btn:hover, .contact-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .ngo-content {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+    }
+
+    .main-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .sidebar-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--primary-color);
+    }
+
+    .bank-details {
+        background: var(--background-light);
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .bank-detail-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.8rem;
+        padding-bottom: 0.8rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .bank-detail-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .bank-detail-label {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .bank-detail-value {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .registration-details {
+        background: var(--background-light);
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
+
+    .registration-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.8rem;
+        padding-bottom: 0.8rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .registration-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .registration-label {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .registration-value {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .contact-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .contact-label {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .contact-value {
+        font-size: 1rem;
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .about-section {
+        margin-bottom: 2rem;
+    }
+
+    .about-text {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+    }
+
+    .about-details {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        background: var(--background-light);
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
+
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .detail-label {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .detail-value {
+        font-size: 1.1rem;
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+
+    .impact-section {
+        margin-bottom: 2rem;
+    }
+
+    .impact-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .stat-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1.5rem;
+        background: var(--background-light);
+        border-radius: 8px;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .stat-label {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        text-align: center;
+    }
+
+    .impact-description {
+        background: var(--background-light);
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
+
+    .programs-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .program-item {
+        background: var(--background-light);
+        padding: 1.5rem;
+        border-radius: 8px;
+    }
+
+    .program-item h3 {
+        color: var(--primary-color);
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .program-item p {
+        color: var(--text-secondary);
+        line-height: 1.5;
+    }
+
+    .social-links {
+        grid-column: 1 / -1;
+    }
+
+    .social-icons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .social-icon {
+        color: white;
+        font-size: 1.2rem;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    .social-icon.website {
+        background-color: #2196F3;
+    }
+
+    .social-icon.facebook {
+        background-color: #4267B2;
+    }
+
+    .social-icon.instagram {
+        background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+    }
+
+    .social-icon.other {
+        background-color: #607D8B;
+    }
+
+    .social-icon:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .verified {
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+
+    .unverified {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .social-media-section {
+        margin-bottom: 2rem;
+        background: var(--background-light);
+        padding: 1.5rem;
+        border-radius: 10px;
+    }
+
+    .social-platforms {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .social-platform-link {
+        text-decoration: none;
+        color: inherit;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: block;
+    }
+
+    .social-platform-link:hover {
+        transform: translateY(-5px);
+    }
+
+    .social-platform {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: box-shadow 0.3s ease;
+    }
+
+    .social-platform:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .social-platform-icon {
+        font-size: 1.8rem;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        color: white;
+    }
+
+    .fa-globe {
+        background-color: #2196F3;
+    }
+
+    .fa-facebook {
+        background-color: #4267B2;
+    }
+
+    .fa-instagram {
+        background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+    }
+
+    .fa-link {
+        background-color: #607D8B;
+    }
+
+    .social-platform-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+
+    .social-platform-name {
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .social-platform-url {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 180px;
+    }
+
+    .social-media-description {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .ngo-header {
+            grid-template-columns: 1fr;
+        }
+
+        .ngo-content {
+            grid-template-columns: 1fr;
+        }
+
+        .ngo-contact-info {
+            grid-template-columns: 1fr;
+        }
+
+        .ngo-actions {
+            flex-direction: column;
+        }
+
+        .about-details,
+        .impact-stats {
+            grid-template-columns: 1fr;
+        }
+        
+        .social-platforms {
+            grid-template-columns: 1fr;
+        }
+        
+        .social-platform-url {
+            max-width: 230px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .social-platform {
+            flex-direction: column;
+            text-align: center;
+            padding: 1.5rem 1rem;
+        }
+        
+        .social-platform-icon {
+            margin-bottom: 0.5rem;
+        }
+        
+        .social-platform-url {
+            max-width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ngo-details-container">
+    <div class="ngo-header">
+        <div class="ngo-image-section">
+            {% if ngo.ngo_profile_image %}
+            <img src="{{ ngo.ngo_profile_image.url }}" alt="{{ ngo.name }} NGO" class="ngo-image">
+            {% else %}
+            <img src="{% static 'images/default-ngo.jpg' %}" alt="Default NGO Image" class="ngo-image">
+            {% endif %}
+            <div class="ngo-category-badge">{{ ngo.services }}</div>
+        </div>
+        <div class="ngo-info-section">
+            <h1 class="ngo-name">{{ ngo.name }}</h1>
+            <p class="ngo-mission">{{ ngo.mission }}</p>
+            <div class="ngo-contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <div class="contact-details">
+                        <span class="contact-label">Email Address</span>
+                        <span class="contact-value">{{ ngo.email }}</span>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <div class="contact-details">
+                        <span class="contact-label">Phone Number</span>
+                        <span class="contact-value">{{ ngo.contact_number }}</span>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="contact-details">
+                        <span class="contact-label">Office Address</span>
+                        <span class="contact-value">{{ ngo.address }}</span>
+                    </div>
+                </div>
+                {% if ngo.website or ngo.facebook or ngo.instagram or ngo.other_social %}
+                <div class="contact-item social-links">
+                    <i class="fas fa-share-alt"></i>
+                    <div class="contact-details">
+                        <span class="contact-label">Connect With Us</span>
+                        <div class="social-icons">
+                            {% if ngo.website %}
+                            <a href="{{ ngo.website }}" target="_blank" class="social-icon website" title="Visit our website">
+                                <i class="fas fa-globe"></i>
+                            </a>
+                            {% endif %}
+                            {% if ngo.facebook %}
+                            <a href="{{ ngo.facebook }}" target="_blank" class="social-icon facebook" title="Follow us on Facebook">
+                                <i class="fab fa-facebook"></i>
+                            </a>
+                            {% endif %}
+                            {% if ngo.instagram %}
+                            <a href="{{ ngo.instagram }}" target="_blank" class="social-icon instagram" title="Follow us on Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            {% endif %}
+                            {% if ngo.other_social %}
+                            <a href="{{ ngo.other_social }}" target="_blank" class="social-icon other" title="Connect with us on other platforms">
+                                <i class="fas fa-link"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            <div class="ngo-actions">
+                <a href="{% url 'donate_to_ngo' ngo.id %}" class="donate-btn">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    Donate Now
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="ngo-content">
+        <div class="main-content">
+            <h2 class="section-title">Our Impact</h2>
+            <div class="impact-section">
+                <div class="impact-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">{{ ngo.donation_set.count }}</span>
+                        <span class="stat-label">Donations Received</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">{{ ngo.volunteer_set.count }}</span>
+                        <span class="stat-label">Active Volunteers</span>
+                    </div>
+                </div>
+                <div class="impact-description">
+                    <p>Together, we can make a difference in our community.</p>
+                </div>
+            </div>
+            
+            {% if ngo.website or ngo.facebook or ngo.instagram or ngo.other_social %}
+            <h2 class="section-title">Connect With Us</h2>
+            <div class="social-media-section">
+                <div class="social-platforms">
+                    {% if ngo.website %}
+                    <a href="{{ ngo.website }}" target="_blank" class="social-platform-link">
+                        <div class="social-platform">
+                            <i class="fas fa-globe social-platform-icon"></i>
+                            <div class="social-platform-details">
+                                <span class="social-platform-name">Website</span>
+                                <span class="social-platform-url">{{ ngo.website }}</span>
+                            </div>
+                        </div>
+                    </a>
+                    {% endif %}
+                    
+                    {% if ngo.facebook %}
+                    <a href="{{ ngo.facebook }}" target="_blank" class="social-platform-link">
+                        <div class="social-platform">
+                            <i class="fab fa-facebook social-platform-icon"></i>
+                            <div class="social-platform-details">
+                                <span class="social-platform-name">Facebook</span>
+                                <span class="social-platform-url">{{ ngo.facebook }}</span>
+                            </div>
+                        </div>
+                    </a>
+                    {% endif %}
+                    
+                    {% if ngo.instagram %}
+                    <a href="{{ ngo.instagram }}" target="_blank" class="social-platform-link">
+                        <div class="social-platform">
+                            <i class="fab fa-instagram social-platform-icon"></i>
+                            <div class="social-platform-details">
+                                <span class="social-platform-name">Instagram</span>
+                                <span class="social-platform-url">{{ ngo.instagram }}</span>
+                            </div>
+                        </div>
+                    </a>
+                    {% endif %}
+                    
+                    {% if ngo.other_social %}
+                    <a href="{{ ngo.other_social }}" target="_blank" class="social-platform-link">
+                        <div class="social-platform">
+                            <i class="fas fa-link social-platform-icon"></i>
+                            <div class="social-platform-details">
+                                <span class="social-platform-name">Other</span>
+                                <span class="social-platform-url">{{ ngo.other_social }}</span>
+                            </div>
+                        </div>
+                    </a>
+                    {% endif %}
+                </div>
+                <p class="social-media-description">Follow us on social media to stay updated with our latest activities and initiatives.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="sidebar-content">
+            <h2 class="section-title">Bank Details</h2>
+            <div class="bank-details">
+                <div class="bank-detail-item">
+                    <span class="bank-detail-label">Bank Name</span>
+                    <span class="bank-detail-value">{{ ngo.bank_name }}</span>
+                </div>
+                <div class="bank-detail-item">
+                    <span class="bank-detail-label">Account Number</span>
+                    <span class="bank-detail-value">{{ ngo.account_number }}</span>
+                </div>
+                <div class="bank-detail-item">
+                    <span class="bank-detail-label">IFSC Code</span>
+                    <span class="bank-detail-value">{{ ngo.ifsc_code }}</span>
+                </div>
+            </div>
+
+            <h2 class="section-title">Registration Details</h2>
+            <div class="registration-details">
+                <div class="registration-item">
+                    <span class="registration-label">Registration Number</span>
+                    <span class="registration-value">{{ ngo.signup_ngo.registration_number }}</span>
+                </div>
+                <div class="registration-item">
+                    <span class="registration-label">Category</span>
+                    <span class="registration-value">{{ ngo.services }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

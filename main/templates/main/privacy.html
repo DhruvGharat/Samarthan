@@ -1,0 +1,199 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Privacy Policy - SAMARTHAN{% endblock %}
+
+{% block extra_css %}
+<style>
+    .privacy-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .privacy-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .privacy-header h1 {
+        color: var(--primary-color);
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .privacy-header p {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .privacy-section {
+        margin-bottom: 2.5rem;
+    }
+
+    .privacy-section h2 {
+        color: var(--secondary-color);
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--primary-color);
+    }
+
+    .privacy-section p {
+        color: #444;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .privacy-section ul {
+        list-style-type: disc;
+        margin-left: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .privacy-section li {
+        color: #444;
+        line-height: 1.6;
+        margin-bottom: 0.5rem;
+    }
+
+    .last-updated {
+        text-align: right;
+        color: #666;
+        font-style: italic;
+        margin-top: 3rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="privacy-container">
+    <div class="privacy-header">
+        <h1>Privacy Policy</h1>
+        <p>At SAMARTHAN, we are committed to protecting your privacy and ensuring the security of your personal information.</p>
+    </div>
+
+    <div class="privacy-section">
+        <h2>1. Information We Collect</h2>
+        <p>We collect the following types of information:</p>
+        <ul>
+            <li>For Donors:
+                <ul>
+                    <li>Name and contact information</li>
+                    <li>Email address</li>
+                    <li>Donation history</li>
+                    <li>Bank account details for donations</li>
+                </ul>
+            </li>
+            <li>For NGOs:
+                <ul>
+                    <li>Organization name and registration details</li>
+                    <li>Contact information</li>
+                    <li>Bank account information</li>
+                    <li>Registration certificates and documents</li>
+                    <li>Mission statements and project details</li>
+                </ul>
+            </li>
+            <li>For Volunteers:
+                <ul>
+                    <li>Name and contact information</li>
+                    <li>Availability and preferences</li>
+                    <li>Skills and interests</li>
+                    <li>Application status with NGOs</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="privacy-section">
+        <h2>2. How We Use Your Information</h2>
+        <p>Your information is used for:</p>
+        <ul>
+            <li>Processing and recording donations</li>
+            <li>Generating donation receipts and records</li>
+            <li>Verifying NGO credentials and documentation</li>
+            <li>Facilitating volunteer-NGO connections</li>
+            <li>Sending important updates and notifications</li>
+            <li>Maintaining donation history and tracking</li>
+            <li>Improving our platform services</li>
+        </ul>
+    </div>
+
+    <div class="privacy-section">
+        <h2>3. Data Security</h2>
+        <p>We protect your data through:</p>
+        <ul>
+            <li>Secure SSL encryption for all transactions</li>
+            <li>Regular security audits and updates</li>
+            <li>Restricted access to personal information</li>
+            <li>Secure storage of sensitive data</li>
+            <li>Regular backups and data protection measures</li>
+        </ul>
+    </div>
+
+    <div class="privacy-section">
+        <h2>4. Information Sharing</h2>
+        <p>We share information only with:</p>
+        <ul>
+            <li>NGOs receiving your donations (donation details only)</li>
+            <li>Banking partners for processing transactions</li>
+            <li>Authorized verification agencies for NGO verification</li>
+            <li>Legal authorities when required by law</li>
+        </ul>
+        <p>We never sell or share your personal information with third parties for marketing purposes.</p>
+    </div>
+
+    <div class="privacy-section">
+        <h2>5. Your Rights</h2>
+        <p>You have the right to:</p>
+        <ul>
+            <li>Access your personal information</li>
+            <li>Update or correct your information</li>
+            <li>Request deletion of your account</li>
+            <li>Download your donation history</li>
+            <li>Opt-out of communications</li>
+            <li>Review your volunteer applications</li>
+        </ul>
+    </div>
+
+    <div class="privacy-section">
+        <h2>6. Cookies and Tracking</h2>
+        <p>We use cookies to:</p>
+        <ul>
+            <li>Maintain secure login sessions</li>
+            <li>Remember your preferences</li>
+            <li>Improve platform performance</li>
+            <li>Track donation patterns for better service</li>
+            <li>Enhance user experience</li>
+        </ul>
+    </div>
+
+    <div class="privacy-section">
+        <h2>7. Data Retention</h2>
+        <p>We retain your data:</p>
+        <ul>
+            <li>For donors: Donation records are kept for legal and tax purposes</li>
+            <li>For NGOs: Account information is maintained while active</li>
+            <li>For volunteers: Application data is stored until explicitly removed</li>
+            <li>Transaction records: Maintained as required by law</li>
+        </ul>
+    </div>
+
+    <div class="privacy-section">
+        <h2>8. Changes to Privacy Policy</h2>
+        <p>We may update this privacy policy periodically. Users will be notified of significant changes via email or website notifications. Continued use of the platform after changes constitutes acceptance of the updated policy.</p>
+    </div>
+
+    <div class="privacy-section">
+        <h2>9. Contact Us</h2>
+        <p>For privacy-related questions or concerns, please contact us at samarthan1313@gmail.com or through our website's contact form.</p>
+    </div>
+
+    <div class="last-updated">
+        Last updated: March 2024
+    </div>
+</div>
+{% endblock %} 

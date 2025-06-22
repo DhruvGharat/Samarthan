@@ -1,0 +1,302 @@
+{% extends 'main/admin_base.html' %}
+{% load static %}
+
+{% block title %}User Information - SAMARTHAN Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+    .user-table-container {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+
+    .user-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .user-table th,
+    .user-table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .user-table th {
+        background: var(--primary-color);
+        color: white;
+        font-weight: 500;
+    }
+
+    .user-table tr:hover {
+        background: var(--bg-light);
+    }
+
+    .section-header {
+        margin-bottom: 2rem;
+    }
+
+    .section-header h1 {
+        color: var(--text-color);
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .section-header p {
+        color: #666;
+    }
+
+    .btn-remove {
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+        border: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: #ef4444;
+        color: white;
+    }
+
+    .btn-remove:hover {
+        background: #dc2626;
+    }
+
+    .search-container {
+        margin-bottom: 2rem;
+    }
+
+    .search-input {
+        padding: 0.8rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        width: 300px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(135, 153, 87, 0.1);
+        outline: none;
+    }
+
+    .user-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-card h3 {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-card p {
+        color: var(--text-color);
+        font-size: 1.8rem;
+        font-weight: 600;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+
+    .modal.active {
+        display: flex;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+    }
+
+    .modal-title {
+        color: var(--text-color);
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .modal-text {
+        color: #666;
+        margin-bottom: 2rem;
+    }
+
+    .modal-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    .btn-cancel {
+        padding: 0.8rem 1.5rem;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        background: white;
+        color: var(--text-color);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cancel:hover {
+        background: var(--bg-light);
+    }
+
+    .btn-confirm {
+        padding: 0.8rem 1.5rem;
+        border-radius: 6px;
+        border: none;
+        background: #ef4444;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-confirm:hover {
+        background: #dc2626;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="section-header">
+    <h1>User Information</h1>
+    <p>Manage registered users</p>
+</div>
+
+<div class="user-stats">
+    <div class="stat-card">
+        <h3>Total Users</h3>
+        <p>{{ total_users }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>Active Users</h3>
+        <p>{{ active_users }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>Total Donations</h3>
+        <p>₹{{ total_donations }}</p>
+    </div>
+</div>
+
+<div class="search-container">
+    <input type="text" id="userSearch" class="search-input" placeholder="Search users...">
+</div>
+
+<div class="user-table-container">
+    <table class="user-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Join Date</th>
+                <th>Total Donations</th>
+                <th>Last Active</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.first_name }} {{ user.last_name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                <td>₹{{ user.total_donations|default:"0" }}</td>
+                <td>{{ user.last_login|date:"M d, Y H:i"|default:"Never" }}</td>
+                <td>
+                    <button class="btn-remove" onclick="showRemoveModal('{{ user.id }}', '{{ user.first_name }} {{ user.last_name }}')">
+                        <i class="fas fa-trash"></i> Remove
+                    </button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 2rem;">
+                    No users found
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Remove User Modal -->
+<div id="removeModal" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-title">Remove User</h2>
+        <p class="modal-text">Are you sure you want to remove <span id="userName"></span>? This action cannot be undone.</p>
+        <div class="modal-buttons">
+            <button class="btn-cancel" onclick="hideRemoveModal()">Cancel</button>
+            <form id="removeUserForm" method="POST" action="" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn-confirm">Remove User</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('userSearch');
+    const tableRows = document.querySelectorAll('.user-table tbody tr');
+
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+
+        tableRows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(searchTerm) ? '' : 'none';
+        });
+    });
+});
+
+function showRemoveModal(userId, userName) {
+    const modal = document.getElementById('removeModal');
+    const userNameSpan = document.getElementById('userName');
+    const form = document.getElementById('removeUserForm');
+
+    userNameSpan.textContent = userName;
+    form.action = `/admin/users/remove/${userId}/`;
+    modal.classList.add('active');
+}
+
+function hideRemoveModal() {
+    const modal = document.getElementById('removeModal');
+    modal.classList.remove('active');
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('removeModal');
+    if (event.target === modal) {
+        hideRemoveModal();
+    }
+});
+</script>
+{% endblock %} 

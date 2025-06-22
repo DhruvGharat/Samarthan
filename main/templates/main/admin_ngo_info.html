@@ -1,0 +1,425 @@
+{% extends 'main/admin_base.html' %}
+{% load static %}
+
+{% block title %}NGO Management - SAMARTHAN Admin{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <h1>NGO Management</h1>
+    <p>View and manage all registered NGOs</p>
+</div>
+
+<div class="admin-stats">
+    <div class="stat-card">
+        <div class="stat-icon">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <div class="stat-value">{{ total_ngos }}</div>
+            <div class="stat-label">Total NGOs</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon verified">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <div class="stat-value">{{ verified_ngos }}</div>
+            <div class="stat-label">Verified NGOs</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon pending">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+        </div>
+        <div class="stat-content">
+            <div class="stat-value">{{ pending_ngos }}</div>
+            <div class="stat-label">Pending Verification</div>
+        </div>
+    </div>
+</div>
+
+<div class="admin-filters">
+    <input type="text" class="admin-filter admin-search" id="ngoSearch" placeholder="Search NGOs...">
+    <select class="admin-filter" id="categoryFilter">
+        <option value="">All Categories</option>
+        <option value="education">Education</option>
+        <option value="healthcare">Healthcare</option>
+        <option value="environment">Environment</option>
+        <option value="animal">Animal Welfare</option>
+        <option value="food">Food</option>
+        <option value="shelter">Shelter</option>
+        <option value="others">Others</option>
+    </select>
+    <select class="admin-filter" id="statusFilter">
+        <option value="">All Status</option>
+        <option value="verified">Verified</option>
+        <option value="pending">Pending</option>
+    </select>
+</div>
+
+<div class="admin-table-wrapper">
+    <div class="admin-table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>NGO Name</th>
+                    <th>Category</th>
+                    <th>Registration Number</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ngo in ngos %}
+                <tr>
+                    <td>
+                        <div class="ngo-info">
+                            <div class="ngo-name">{{ ngo.name }}</div>
+                            <div class="ngo-email">{{ ngo.email }}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="category-badge">{{ ngo.signup_ngo.category }}</span>
+                    </td>
+                    <td>{{ ngo.registration_number }}</td>
+                    <td>
+                        {% if ngo.is_verified %}
+                        <span class="status-badge status-verified">Verified</span>
+                        {% else %}
+                        <span class="status-badge status-pending">Pending</span>
+                        {% endif %}
+                    </td>
+                    
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{% url 'admin_ngo_details' ngo.id %}" class="action-btn view-btn" title="View Details">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </a>
+                            {% if not ngo.is_verified %}
+                            <a href="{% url 'admin_verify_ngo' ngo.id %}" class="action-btn verify-btn" title="Verify NGO">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'admin_remove_ngo' ngo.id %}" class="action-btn remove-btn" onclick="return confirm('Are you sure you want to remove this NGO?')" title="Remove NGO">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .admin-header {
+        margin-bottom: 2rem;
+    }
+
+    .admin-header h1 {
+        font-size: 1.875rem;
+        color: #1e293b;
+        margin-bottom: 0.5rem;
+    }
+
+    .admin-header p {
+        color: #64748b;
+    }
+
+    .admin-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: #f1f5f9;
+        color: #475569;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .stat-icon.verified {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .stat-icon.pending {
+        background: #fef9c3;
+        color: #ca8a04;
+    }
+
+    .stat-content {
+        flex: 1;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1e293b;
+        line-height: 1;
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    .admin-table-wrapper {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .admin-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .admin-table th {
+        background: #f8fafc;
+        padding: 1rem 1.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #475569;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .admin-table td {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+    }
+
+    .admin-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .admin-table tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    .ngo-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .ngo-name {
+        font-weight: 500;
+        color: #1e293b;
+    }
+
+    .ngo-email {
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    .category-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        background: #f1f5f9;
+        color: #475569;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .status-verified {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .status-pending {
+        background: #fef9c3;
+        color: #ca8a04;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        transition: all 0.2s;
+    }
+
+    .view-btn {
+        background: #f1f5f9;
+        color: #475569;
+    }
+
+    .view-btn:hover {
+        background: #e2e8f0;
+        color: #1e293b;
+    }
+
+    .verify-btn {
+        background: #dbeafe;
+        color: #2563eb;
+    }
+
+    .verify-btn:hover {
+        background: #bfdbfe;
+    }
+
+    .remove-btn {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .remove-btn:hover {
+        background: #fecaca;
+    }
+
+    .admin-filters {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .admin-filter {
+        padding: 0.625rem 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        color: #475569;
+        background: white;
+    }
+
+    .admin-search {
+        min-width: 300px;
+    }
+
+    .admin-filter:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    @media (max-width: 768px) {
+        .admin-stats {
+            grid-template-columns: 1fr;
+        }
+
+        .admin-filters {
+            flex-direction: column;
+        }
+
+        .admin-search {
+            min-width: 100%;
+        }
+
+        .admin-table-wrapper {
+            margin: 0 -1rem;
+            border-radius: 0;
+        }
+
+        .admin-table th:nth-child(2),
+        .admin-table td:nth-child(2),
+        .admin-table th:nth-child(3),
+        .admin-table td:nth-child(3) {
+            display: none;
+        }
+
+        .action-buttons {
+            flex-wrap: wrap;
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('ngoSearch');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const statusFilter = document.getElementById('statusFilter');
+    const tableRows = document.querySelectorAll('.admin-table tbody tr');
+
+    function filterTable() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const categoryValue = categoryFilter.value.toLowerCase();
+        const statusValue = statusFilter.value.toLowerCase();
+
+        tableRows.forEach(row => {
+            const ngoName = row.querySelector('.ngo-name').textContent.toLowerCase();
+            const ngoEmail = row.querySelector('.ngo-email').textContent.toLowerCase();
+            const categoryBadge = row.querySelector('.category-badge').textContent.toLowerCase();
+            const status = row.querySelector('.status-badge').textContent.toLowerCase();
+
+            // Map displayed category text to filter value
+            const categoryMapping = {
+                'education': 'education',
+                'healthcare': 'healthcare',
+                'environment': 'environment',
+                'animal welfare': 'animal',
+                'food': 'food',
+                'shelter': 'shelter',
+                'others': 'others'
+            };
+            
+            // Get the filter value for the displayed category
+            const categoryFilterValue = categoryMapping[categoryBadge] || categoryBadge;
+
+            const matchesSearch = ngoName.includes(searchTerm) || ngoEmail.includes(searchTerm);
+            const matchesCategory = !categoryValue || categoryFilterValue === categoryValue;
+            const matchesStatus = !statusValue || status.includes(statusValue);
+
+            row.style.display = matchesSearch && matchesCategory && matchesStatus ? '' : 'none';
+        });
+    }
+
+    searchInput.addEventListener('input', filterTable);
+    categoryFilter.addEventListener('change', filterTable);
+    statusFilter.addEventListener('change', filterTable);
+});
+</script>
+{% endblock %}

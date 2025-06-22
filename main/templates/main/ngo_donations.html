@@ -1,0 +1,422 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}NGO Donations Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/ngo_donations.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="donations-dashboard">
+    <div class="dashboard-header">
+        <h1>Donations Dashboard</h1>
+        <p>Track and manage your NGO's financial activities</p>
+    </div>
+
+    <div class="summary-cards">
+        <div class="summary-box">
+            <div class="summary-icon">
+                <i class="fas fa-donate"></i>
+            </div>
+            <div class="summary-info">
+                <div class="summary-label">Total Donations</div>
+                <div class="summary-value">₹{{ total_donations }}</div>
+                <div class="summary-trend positive">
+                    <i class="fas fa-arrow-up"></i> Income
+                </div>
+            </div>
+        </div>
+        <div class="summary-box">
+            <div class="summary-icon">
+                <i class="fas fa-file-invoice-dollar"></i>
+            </div>
+            <div class="summary-info">
+                <div class="summary-label">Total Expenses</div>
+                <div class="summary-value">₹{{ total_expenses }}</div>
+                <div class="summary-trend negative">
+                    <i class="fas fa-arrow-down"></i> Outflow
+                </div>
+            </div>
+        </div>
+        <div class="summary-box">
+            <div class="summary-icon">
+                <i class="fas fa-wallet"></i>
+            </div>
+            <div class="summary-info">
+                <div class="summary-label">Current Balance</div>
+                <div class="summary-value">₹{{ balance }}</div>
+                <div class="summary-trend {% if balance >= 0 %}positive{% else %}negative{% endif %}">
+                    <i class="fas fa-chart-line"></i> Net Worth
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="data-section">
+        <div class="section-header">
+            <h2><i class="fas fa-history"></i> Donation History</h2>
+            <div class="section-actions">
+                <button class="btn-filter" onclick="toggleFilters('donations')">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+                <button class="btn-export" onclick="exportToExcel('donations-table')">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+        </div>
+        
+        <!-- Donations Filter Panel -->
+        <div class="filter-panel" id="donations-filter-panel" style="display: none;">
+            <div class="filter-form">
+                <div class="filter-group">
+                    <label for="donation-date-from">From Date:</label>
+                    <input type="date" id="donation-date-from" class="filter-input">
+                </div>
+                <div class="filter-group">
+                    <label for="donation-date-to">To Date:</label>
+                    <input type="date" id="donation-date-to" class="filter-input">
+                </div>
+                <div class="filter-group">
+                    <label for="donation-amount-min">Min Amount:</label>
+                    <input type="number" id="donation-amount-min" class="filter-input" placeholder="₹">
+                </div>
+                <div class="filter-group">
+                    <label for="donation-amount-max">Max Amount:</label>
+                    <input type="number" id="donation-amount-max" class="filter-input" placeholder="₹">
+                </div>
+                <div class="filter-actions">
+                    <button class="btn-apply" onclick="applyFilters('donations')">Apply</button>
+                    <button class="btn-reset" onclick="resetFilters('donations')">Reset</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table class="data-table" id="donations-table">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-user"></i> Donor Name</th>
+                        <th><i class="fas fa-calendar"></i> Date</th>
+                        <th><i class="fas fa-university"></i> Account Number</th>
+                        <th><i class="fas fa-rupee-sign"></i> Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for donation in donations %}
+                    <tr class="fade-in">
+                        <td>{{ donation.user.get_full_name }}</td>
+                        <td>{{ donation.donated_at|date:"M d, Y" }}</td>
+                        <td>{{ donation.user_account_number }}</td>
+                        <td class="amount-cell">₹{{ donation.amount }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="no-data">
+                            <div class="no-data-message">
+                                <i class="fas fa-inbox"></i>
+                                <p>No donations received yet</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="data-section">
+        <div class="section-header">
+            <h2><i class="fas fa-receipt"></i> Expenses History</h2>
+            <div class="section-actions">
+                <button class="btn-filter" onclick="toggleFilters('expenses')">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+                <button class="btn-export" onclick="exportToExcel('expenses-table')">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+        </div>
+        
+        <!-- Expenses Filter Panel -->
+        <div class="filter-panel" id="expenses-filter-panel" style="display: none;">
+            <div class="filter-form">
+                <div class="filter-group">
+                    <label for="expense-date-from">From Date:</label>
+                    <input type="date" id="expense-date-from" class="filter-input">
+                </div>
+                <div class="filter-group">
+                    <label for="expense-date-to">To Date:</label>
+                    <input type="date" id="expense-date-to" class="filter-input">
+                </div>
+                <div class="filter-group">
+                    <label for="expense-amount-min">Min Amount:</label>
+                    <input type="number" id="expense-amount-min" class="filter-input" placeholder="₹">
+                </div>
+                <div class="filter-group">
+                    <label for="expense-amount-max">Max Amount:</label>
+                    <input type="number" id="expense-amount-max" class="filter-input" placeholder="₹">
+                </div>
+                <div class="filter-group full-width">
+                    <label for="expense-description">Description contains:</label>
+                    <input type="text" id="expense-description" class="filter-input" placeholder="Search terms...">
+                </div>
+                <div class="filter-actions">
+                    <button class="btn-apply" onclick="applyFilters('expenses')">Apply</button>
+                    <button class="btn-reset" onclick="resetFilters('expenses')">Reset</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table class="data-table" id="expenses-table">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-calendar"></i> Date</th>
+                        <th><i class="fas fa-align-left"></i> Description</th>
+                        <th><i class="fas fa-rupee-sign"></i> Amount</th>
+                        <th><i class="fas fa-file-invoice"></i> Bill</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expense in expenses %}
+                    <tr class="fade-in">
+                        <td>{{ expense.transaction_date|date:"M d, Y" }}</td>
+                        <td>{{ expense.description }}</td>
+                        <td class="amount-cell">₹{{ expense.amount }}</td>
+                        <td>
+                            <button class="btn-view" onclick="viewBill('{{ expense.bill_photo.url }}')">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="no-data">
+                            <div class="no-data-message">
+                                <i class="fas fa-file-invoice"></i>
+                                <p>No expenses recorded yet</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="data-section">
+        <div class="section-header">
+            <h2><i class="fas fa-plus-circle"></i> Add New Expense</h2>
+        </div>
+        <form method="post" action="{% url 'add_expense' %}" class="expense-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="amount">
+                        <i class="fas fa-rupee-sign"></i> Amount
+                    </label>
+                    <input type="number" id="amount" name="amount" placeholder="Enter amount" required>
+                </div>
+                <div class="form-group">
+                    <label for="transaction_date">
+                        <i class="fas fa-calendar"></i> Date of Transaction
+                    </label>
+                    <input type="date" id="transaction_date" name="transaction_date" required>
+                </div>
+                <div class="form-group full-width">
+                    <label for="description">
+                        <i class="fas fa-align-left"></i> Description
+                    </label>
+                    <textarea id="description" name="description" placeholder="Enter expense description" required></textarea>
+                </div>
+                <div class="form-group full-width">
+                    <label for="bill_photo">
+                        <i class="fas fa-file-upload"></i> Bill Photo
+                    </label>
+                    <div class="file-upload-wrapper">
+                        <div class="file-upload-info">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span class="file-name">No file chosen</span>
+                        </div>
+                        <input type="file" id="bill_photo" name="bill_photo" accept="image/*" required>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save"></i> Save Expense
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // File upload preview
+    document.getElementById('bill_photo').addEventListener('change', function(e) {
+        const fileName = e.target.files[0]?.name || 'No file chosen';
+        document.querySelector('.file-name').textContent = fileName;
+    });
+
+    // View bill in modal
+    function viewBill(url) {
+        const modal = document.createElement('div');
+        modal.className = 'bill-modal';
+        modal.innerHTML = `
+            <div class="bill-modal-content">
+                <span class="close-modal">&times;</span>
+                <img src="${url}" alt="Bill">
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        modal.querySelector('.close-modal').onclick = function() {
+            modal.remove();
+        };
+
+        modal.onclick = function(e) {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        };
+    }
+
+    // Export table to Excel
+    function exportToExcel(tableId) {
+        const table = document.getElementById(tableId);
+        const rows = Array.from(table.querySelectorAll('tr'));
+        
+        let csvContent = "data:text/csv;charset=utf-8,";
+        
+        rows.forEach(row => {
+            const cells = Array.from(row.querySelectorAll('th, td'));
+            const rowData = cells.map(cell => cell.textContent.trim());
+            csvContent += rowData.join(",") + "\r\n";
+        });
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `${tableId}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // Toggle filter panels
+    function toggleFilters(type) {
+        const panel = document.getElementById(`${type}-filter-panel`);
+        if (panel.style.display === 'none') {
+            panel.style.display = 'block';
+        } else {
+            panel.style.display = 'none';
+        }
+    }
+    
+    // Apply filters
+    function applyFilters(type) {
+        const table = document.getElementById(`${type}-table`);
+        const rows = Array.from(table.querySelectorAll('tbody tr'));
+        
+        // Skip if there's only a "no data" row
+        if (rows.length === 1 && rows[0].querySelector('.no-data')) {
+            return;
+        }
+        
+        // Get filter values
+        let dateFrom, dateTo, amountMin, amountMax, description;
+        
+        if (type === 'donations') {
+            dateFrom = document.getElementById('donation-date-from').value;
+            dateTo = document.getElementById('donation-date-to').value;
+            amountMin = document.getElementById('donation-amount-min').value;
+            amountMax = document.getElementById('donation-amount-max').value;
+        } else if (type === 'expenses') {
+            dateFrom = document.getElementById('expense-date-from').value;
+            dateTo = document.getElementById('expense-date-to').value;
+            amountMin = document.getElementById('expense-amount-min').value;
+            amountMax = document.getElementById('expense-amount-max').value;
+            description = document.getElementById('expense-description').value.toLowerCase();
+        }
+        
+        // Filter rows
+        rows.forEach(row => {
+            let showRow = true;
+            
+            // Date filtering
+            if (dateFrom || dateTo) {
+                const dateCell = row.querySelectorAll('td')[type === 'donations' ? 1 : 0].textContent;
+                const rowDate = new Date(dateCell);
+                
+                if (dateFrom && new Date(dateFrom) > rowDate) {
+                    showRow = false;
+                }
+                
+                if (dateTo && new Date(dateTo) < rowDate) {
+                    showRow = false;
+                }
+            }
+            
+            // Amount filtering
+            if ((amountMin || amountMax) && showRow) {
+                const amountCell = row.querySelector('.amount-cell').textContent;
+                const amount = parseFloat(amountCell.replace('₹', '').trim());
+                
+                if (amountMin && amount < parseFloat(amountMin)) {
+                    showRow = false;
+                }
+                
+                if (amountMax && amount > parseFloat(amountMax)) {
+                    showRow = false;
+                }
+            }
+            
+            // Description filtering (expenses only)
+            if (description && type === 'expenses' && showRow) {
+                const descriptionCell = row.querySelectorAll('td')[1].textContent.toLowerCase();
+                if (!descriptionCell.includes(description)) {
+                    showRow = false;
+                }
+            }
+            
+            // Show or hide row
+            row.style.display = showRow ? '' : 'none';
+        });
+    }
+    
+    // Reset filters
+    function resetFilters(type) {
+        // Reset filter inputs
+        if (type === 'donations') {
+            document.getElementById('donation-date-from').value = '';
+            document.getElementById('donation-date-to').value = '';
+            document.getElementById('donation-amount-min').value = '';
+            document.getElementById('donation-amount-max').value = '';
+        } else if (type === 'expenses') {
+            document.getElementById('expense-date-from').value = '';
+            document.getElementById('expense-date-to').value = '';
+            document.getElementById('expense-amount-min').value = '';
+            document.getElementById('expense-amount-max').value = '';
+            document.getElementById('expense-description').value = '';
+        }
+        
+        // Show all rows
+        const table = document.getElementById(`${type}-table`);
+        const rows = table.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+            row.style.display = '';
+        });
+    }
+
+    // Add fade-in animation to rows
+    document.addEventListener('DOMContentLoaded', function() {
+        const rows = document.querySelectorAll('.fade-in');
+        rows.forEach((row, index) => {
+            row.style.animationDelay = `${index * 0.1}s`;
+        });
+    });
+</script>
+{% endblock %}

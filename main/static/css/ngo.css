@@ -1,0 +1,159 @@
+@import 'variables.css';
+
+/* NGO Dashboard Layout */
+.ngo-dashboard {
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+}
+
+/* NGO Profile */
+.ngo-profile {
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+}
+
+.profile-header {
+    background: var(--gradient-primary);
+    color: white;
+    padding: var(--spacing-xl);
+    border-radius: var(--border-radius-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.profile-sections {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-lg);
+}
+
+/* NGO Donations */
+.donation-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+}
+
+.stat-card {
+    background: white;
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+}
+
+.stat-card h3 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-sm);
+}
+
+.donation-chart {
+    background: white;
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+    margin-top: var(--spacing-lg);
+}
+
+/* NGO Discovery */
+.ngo-discovery {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+}
+
+.filter-section {
+    background: white;
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.ngo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.ngo-card {
+    background: white;
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    transition: transform var(--transition-fast);
+}
+
+.ngo-card:hover {
+    transform: translateY(-5px);
+}
+
+.ngo-card-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.ngo-card-content {
+    padding: var(--spacing-lg);
+}
+
+/* NGO Forms */
+.ngo-form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+    background: white;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+}
+
+.form-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-section h3 {
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-md);
+}
+
+/* NGO About & Contact */
+.ngo-about,
+.ngo-contact {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+}
+
+.about-section,
+.contact-section {
+    background: white;
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .profile-sections {
+        grid-template-columns: 1fr;
+    }
+    
+    .donation-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .donation-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .ngo-card {
+        margin: 0 var(--spacing-md);
+    }
+    
+    .ngo-form {
+        padding: var(--spacing-md);
+    }
+} 

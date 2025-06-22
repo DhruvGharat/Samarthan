@@ -1,0 +1,76 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}SAMARTHAN - About Us{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/about.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<section class="about-section">
+    <div class="about-header">
+        <h1>About SAMARTHAN</h1>
+        <p>Empowering change through transparent and impactful donations</p>
+    </div>
+    
+    <div class="about-content">
+        <div class="about-mission">
+            <h2>Our Mission</h2>
+            <p>SAMARTHAN aims to bridge the gap between donors and NGOs, creating a transparent and efficient platform for making impactful donations. We believe in empowering both donors and NGOs to create meaningful change in society.</p>
+        </div>
+        
+        <div class="about-vision">
+            <h2>Our Vision</h2>
+            <p>We envision a world where every donation creates maximum impact, where NGOs have the resources they need, and where donors can easily track and see the difference they're making.</p>
+        </div>
+        
+        <div class="about-team">
+            <h2>Our Team</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <img src="{% static 'images/Dhruv.jpg' %}" alt="Dhruv Gharat">
+                    <h3>Dhruv Gharat</h3>
+                    <p>Frontend Developer & Planning Coordinator</p>
+                    <div class="social-icons">
+                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="mailto:dhruvgharar136@gmail.com"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <img src="{% static 'images/Prince.jpg' %}" alt="Prince Panchal">
+                    <h3>Prince Panchal</h3>
+                    <p>Technical Documentation Manager</p>
+                    <div class="social-icons">
+                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="mailto:prince@example.com"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <img src="" alt="Madhura Tandel">
+                    <h3>Madhura Tandel</h3>
+                    <p>UX/UI designer</p>
+                    <div class="social-icons">
+                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="mailto:madhuratandel9@gmail.com"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <img src="{% static 'images/bhumikaimg.png' %}" alt="Bhumika Bhoir">
+                    <h3>Bhumika Bhoir</h3>
+                    <p>Backend Developer</p>
+                    <div class="social-icons">
+                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="mailto:bhoirbhumika56@gmail.com"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,156 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}SAMARTHAN - NGO Registration{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-container ngo-signup-container">
+        <h2>NGO Registration</h2>
+        <p>Join our platform to make a difference in your community</p>
+        
+        {% if messages %}
+        {% for message in messages %}
+        <div class="{% if message.tags == 'error' %}error-message{% else %}success-message{% endif %}">
+            {% if message.tags == 'error' %}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12" y2="16"></line>
+            </svg>
+            {% else %}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            {% endif %}
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        
+        <form method="POST" class="auth-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Basic Information -->
+            <div class="form-section">
+                <h3>Basic Information</h3>
+                <div class="form-group">
+                    <input type="text" name="ngo_name" placeholder="NGO Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="registration_number" placeholder="NGO Registration Number" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="NGO Email" required 
+                           pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" 
+                           title="Enter a valid email address">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="tel" name="contact_number" placeholder="Contact Number" required 
+                               pattern="[0-9]{10}" title="Enter a valid 10-digit contact number">
+                    </div>
+                    <div class="form-group">
+                        <select name="category" required>
+                            <option value="" disabled selected>Select Category</option>
+                            <option value="education">Education</option>
+                            <option value="healthcare">Healthcare</option>
+                            <option value="environment">Environment</option>
+                            <option value="animal">Animal Welfare</option>
+                            <option value="food">Food</option>
+                            <option value="shelter">Shelter</option>
+                            <option value="others">Others</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="address" placeholder="NGO Address" required>
+                </div>
+                <div class="form-group">
+                    <textarea name="mission" placeholder="NGO Mission Statement" rows="4" required></textarea>
+                </div>
+            </div>
+
+            <!-- Bank Details -->
+            <div class="form-section">
+                <h3>Bank Details</h3>
+                <div class="form-group">
+                    <input type="text" name="bank_name" placeholder="Bank Name" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" name="account_number" placeholder="Account Number" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="ifsc_code" placeholder="IFSC Code" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Security -->
+            <div class="form-section">
+                <h3>Account Security</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="password" name="password" placeholder="Password" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Documents -->
+            <div class="form-section">
+                <h3>Documents</h3>
+                <div class="form-group">
+                    <div class="file-input-wrapper">
+                        <div class="file-input-trigger">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <span>Upload NGO Profile Image</span>
+                        </div>
+                        <input type="file" id="ngo_profile_image" name="ngo_profile_image" accept="image/*" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="file-input-wrapper">
+                        <div class="file-input-trigger">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <span>Upload NGO Certificate</span>
+                        </div>
+                        <input type="file" id="ngo_certificate" name="ngo_certificate" accept=".pdf,.jpg,.jpeg,.png" required>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn">
+                <span>Register NGO</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <line x1="19" y1="8" x2="19" y2="14"></line>
+                    <line x1="22" y1="11" x2="16" y2="11"></line>
+                </svg>
+            </button>
+        </form>
+        
+        <div class="auth-links">
+            <p>Already registered? <a href="{% url 'login_ngo' %}">Login to your account</a></p>
+        </div>
+    </div>
+</section>
+{% endblock %}

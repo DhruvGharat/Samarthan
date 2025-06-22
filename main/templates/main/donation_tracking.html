@@ -1,0 +1,1096 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}SAMARTHAN - Donation Tracking{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/donation_tracking.css' %}">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<section class="donation-tracking">
+    <div class="user-welcome">
+        <h1><i class="fas fa-user-circle"></i> Welcome, {{ user_name }}</h1>
+    </div>
+
+    <div class="donation-summary">
+        <h2><i class="fas fa-chart-pie"></i> Donation Summary</h2>
+        <div class="summary-cards">
+            <div class="summary-card">
+                <h3>₹{{ total_donation }}</h3>
+                <p><i class="fas fa-hand-holding-usd"></i> Total Donations</p>
+            </div>
+    
+            <div class="summary-card">
+                <h3>{{ unique_ngos }}</h3>
+                <p><i class="fas fa-hands-helping"></i> NGOs Supported</p>
+            </div>
+    
+            <div class="summary-card">
+                <h3>{{ unique_categories }}</h3>
+                <p><i class="fas fa-tags"></i> Categories</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="volunteer-section">
+        <h2><i class="fas fa-hands-helping"></i> Volunteer Opportunities</h2>
+        <div class="volunteer-card">
+            <div class="volunteer-content">
+                <div class="volunteer-text">
+                    <h3>Make a Difference</h3>
+                    <p>Join our community of volunteers and contribute your skills and time to support NGOs in their mission.</p>
+                    <ul class="volunteer-benefits">
+                        <li><i class="fas fa-check-circle"></i> Work directly with NGOs</li>
+                        <li><i class="fas fa-check-circle"></i> Flexible time commitment</li>
+                        <li><i class="fas fa-check-circle"></i> Choose causes you care about</li>
+                        <li><i class="fas fa-check-circle"></i> Make a real impact</li>
+                    </ul>
+                    <a href="{% url 'volunteer_registration' %}" class="btn volunteer-btn">Become a Volunteer</a>
+                </div>
+                <div class="volunteer-image">
+                    <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?w=800" alt="Volunteer community">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Volunteer Applications Section -->
+    <div class="volunteer-applications">
+        <h2><i class="fas fa-file-alt"></i> My Volunteer Applications</h2>
+        
+        <!-- Pending Applications -->
+        <div class="application-section">
+            <h3><i class="fas fa-clock"></i> Pending Applications</h3>
+            <div class="history-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-building"></i> NGO Name</th>
+                            <th><i class="fas fa-calendar-alt"></i> Preferred Days</th>
+                            <th><i class="fas fa-clock"></i> Time Slot</th>
+                            <th><i class="fas fa-map-marker-alt"></i> NGO Address</th>
+                            <th><i class="fas fa-phone"></i> NGO Contact</th>
+                            <th><i class="fas fa-calendar"></i> Applied On</th>
+                            <th><i class="fas fa-info-circle"></i> Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for application in pending_applications %}
+                        <tr>
+                            <td>{{ application.ngo.name }}</td>
+                            <td>{{ application.preferred_days|join:", " }}</td>
+                            <td>{{ application.get_preferred_time_display }}</td>
+                            <td>{{ application.ngo.address }}</td>
+                            <td>{{ application.ngo.contact_number }}</td>
+                            <td>{{ application.created_at|date:"M d, Y" }}</td>
+                            <td><span class="status-badge pending">Pending</span></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="no-data">No pending applications</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Approved Applications -->
+        <div class="application-section">
+            <h3><i class="fas fa-check-circle"></i> Approved Applications</h3>
+            <div class="history-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-building"></i> NGO Name</th>
+                            <th><i class="fas fa-calendar-alt"></i> Preferred Days</th>
+                            <th><i class="fas fa-clock"></i> Time Slot</th>
+                            <th><i class="fas fa-map-marker-alt"></i> NGO Address</th>
+                            <th><i class="fas fa-phone"></i> NGO Contact</th>
+                            <th><i class="fas fa-calendar"></i> Applied On</th>
+                            <th><i class="fas fa-info-circle"></i> Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for application in approved_applications %}
+                        <tr>
+                            <td>{{ application.ngo.name }}</td>
+                            <td>{{ application.preferred_days|join:", " }}</td>
+                            <td>{{ application.get_preferred_time_display }}</td>
+                            <td>{{ application.ngo.address }}</td>
+                            <td>{{ application.ngo.contact_number }}</td>
+                            <td>{{ application.created_at|date:"M d, Y" }}</td>
+                            <td><span class="status-badge approved">Approved</span></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="no-data">No approved applications</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Rejected Applications -->
+        <div class="application-section">
+            <h3><i class="fas fa-times-circle"></i> Rejected Applications</h3>
+            <div class="history-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-building"></i> NGO Name</th>
+                            <th><i class="fas fa-calendar-alt"></i> Preferred Days</th>
+                            <th><i class="fas fa-clock"></i> Time Slot</th>
+                            <th><i class="fas fa-map-marker-alt"></i> NGO Address</th>
+                            <th><i class="fas fa-phone"></i> NGO Contact</th>
+                            <th><i class="fas fa-calendar"></i> Applied On</th>
+                            <th><i class="fas fa-info-circle"></i> Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for application in rejected_applications %}
+                        <tr>
+                            <td>{{ application.ngo.name }}</td>
+                            <td>{{ application.preferred_days|join:", " }}</td>
+                            <td>{{ application.get_preferred_time_display }}</td>
+                            <td>{{ application.ngo.address }}</td>
+                            <td>{{ application.ngo.contact_number }}</td>
+                            <td>{{ application.created_at|date:"M d, Y" }}</td>
+                            <td><span class="status-badge rejected">Rejected</span></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="no-data">No rejected applications</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Donation History Section -->
+    <div class="donation-history">
+        <div class="history-header">
+            <h2><i class="fas fa-history"></i> Donation History</h2>
+            <button class="btn-filter" onclick="toggleDonationFilters()">
+                <i class="fas fa-filter"></i> Filter
+            </button>
+        </div>
+        
+        <!-- Filter Panel -->
+        <div class="filter-panel" id="donation-filter-panel" style="display: none;">
+            <div class="filter-form">
+                <div class="filter-group">
+                    <label for="ngo-filter">NGO Name</label>
+                    <input type="text" id="ngo-filter" class="filter-input" placeholder="Search by NGO...">
+                </div>
+                <div class="filter-group">
+                    <label for="min-amount-filter">Min Amount</label>
+                    <input type="number" id="min-amount-filter" class="filter-input" placeholder="₹">
+                </div>
+                <div class="filter-group">
+                    <label for="max-amount-filter">Max Amount</label>
+                    <input type="number" id="max-amount-filter" class="filter-input" placeholder="₹">
+                </div>
+                <div class="filter-group">
+                    <label for="from-date-filter">From Date</label>
+                    <input type="date" id="from-date-filter" class="filter-input">
+                </div>
+                <div class="filter-group">
+                    <label for="to-date-filter">To Date</label>
+                    <input type="date" id="to-date-filter" class="filter-input">
+                </div>
+                <div class="filter-actions">
+                    <button class="btn-apply" onclick="applyDonationFilters()">Apply</button>
+                    <button class="btn-reset" onclick="resetDonationFilters()">Reset</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="history-table">
+            <table id="donation-table">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-building"></i> NGO Name</th>
+                        <th><i class="fas fa-rupee-sign"></i> Amount</th>
+                        <th><i class="fas fa-university"></i> Bank Name</th>
+                        <th><i class="fas fa-hashtag"></i> Account Number</th>
+                        <th><i class="fas fa-code"></i> IFSC Code</th>
+                        <th><i class="fas fa-calendar"></i> Date</th>
+                        <th><i class="fas fa-file-alt"></i> Receipt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for donation in donations %}
+                    <tr>
+                        <td>{{ donation.ngo.name }}</td>
+                        <td>₹{{ donation.amount }}</td>
+                        <td>{{ donation.user_bank_name }}</td>
+                        <td>{{ donation.user_account_number }}</td>
+                        <td>{{ donation.user_ifsc_code }}</td>
+                        <td>{{ donation.donated_at|date:"M d, Y" }}</td>
+                        <td>
+                            <button class="btn-receipt" onclick="viewReceipt('{{ donation.receipt_number }}')" title="View Receipt">
+                                <i class="fas fa-file-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="no-data">No donations made yet</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</section>
+
+<!-- Receipt Modal -->
+<div id="receiptModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="receipt-container">
+            <div class="receipt-header">
+                <img src="{% static 'images/logo.png' %}" alt="SAMARTHAN Logo" class="receipt-logo">
+                <h2>Donation Receipt</h2>
+            </div>
+            <div id="receiptContent"></div>
+            <div class="receipt-footer">
+                <button onclick="downloadReceipt()" class="btn-download">
+                    <i class="fas fa-download"></i> Download PDF
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Volunteer Registration Modal -->
+<div id="volunteerModal" class="modal">
+    <div class="modal-content volunteer-modal">
+        <span class="close" onclick="closeVolunteerModal()">&times;</span>
+        <div class="volunteer-form-header">
+            <i class="fas fa-hands-helping"></i>
+            <h2>Volunteer Registration</h2>
+            <p>Join us in making a difference! Please fill out the form below to register as a volunteer.</p>
+        </div>
+        
+        <form id="volunteerForm" method="post" action="{% url 'register_volunteer' %}" onsubmit="return validateVolunteerForm()">
+            {% csrf_token %}
+            
+            <div class="form-section personal-info">
+                <h3><i class="fas fa-user"></i> Personal Information</h3>
+                <div class="form-group">
+                    <label for="name">Full Name <span class="required">*</span></label>
+                    <input type="text" id="name" name="name" required 
+                           placeholder="Enter your full name"
+                           pattern="[A-Za-z\s]{2,50}"
+                           title="Name should only contain letters and spaces, between 2 and 50 characters">
+                </div>
+                
+                <div class="form-group">
+                    <label for="contact">Contact Number <span class="required">*</span></label>
+                    <input type="tel" id="contact" name="contact" required 
+                           placeholder="Enter your contact number"
+                           pattern="[0-9]{10}"
+                           title="Please enter a valid 10-digit phone number">
+                    <small class="form-help">Enter a 10-digit mobile number</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Address <span class="required">*</span></label>
+                    <textarea id="address" name="address" required 
+                            placeholder="Enter your complete address"
+                            rows="3"></textarea>
+                </div>
+            </div>
+
+            <div class="form-section availability">
+                <h3><i class="fas fa-calendar-alt"></i> Availability</h3>
+                <div class="form-group days-selection">
+                    <label>Preferred Days <span class="required">*</span></label>
+                    <div class="checkbox-group">
+                        <div class="day-checkbox">
+                            <input type="checkbox" id="monday" name="days[]" value="Monday">
+                            <label for="monday">Monday</label>
+                        </div>
+                        <div class="day-checkbox">
+                            <input type="checkbox" id="tuesday" name="days[]" value="Tuesday">
+                            <label for="tuesday">Tuesday</label>
+                        </div>
+                        <div class="day-checkbox">
+                            <input type="checkbox" id="wednesday" name="days[]" value="Wednesday">
+                            <label for="wednesday">Wednesday</label>
+                        </div>
+                        <div class="day-checkbox">
+                            <input type="checkbox" id="thursday" name="days[]" value="Thursday">
+                            <label for="thursday">Thursday</label>
+                        </div>
+                        <div class="day-checkbox">
+                            <input type="checkbox" id="friday" name="days[]" value="Friday">
+                            <label for="friday">Friday</label>
+                        </div>
+                        <div class="day-checkbox">
+                            <input type="checkbox" id="saturday" name="days[]" value="Saturday">
+                            <label for="saturday">Saturday</label>
+                        </div>
+                        <div class="day-checkbox">
+                            <input type="checkbox" id="sunday" name="days[]" value="Sunday">
+                            <label for="sunday">Sunday</label>
+                        </div>
+                    </div>
+                    <small class="form-help">Select at least one day</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="timeSlot">Preferred Time Slot <span class="required">*</span></label>
+                    <select id="timeSlot" name="timeSlot" required>
+                        <option value="">Select a time slot</option>
+                        <option value="morning">Morning (9 AM - 12 PM)</option>
+                        <option value="afternoon">Afternoon (12 PM - 4 PM)</option>
+                        <option value="evening">Evening (4 PM - 7 PM)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-section ngo-selection">
+                <h3><i class="fas fa-building"></i> Select NGO</h3>
+                <p class="section-description">Choose an NGO you'd like to volunteer with from the list below:</p>
+                <div class="table-container">
+                    <table class="ngo-table">
+                        <thead>
+                            <tr>
+                                <th>Select</th>
+                                <th>NGO Name</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Address</th>
+                                <th>Contact</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if ngos %}
+                                {% for ngo in ngos %}
+                                <tr class="ngo-row" onclick="selectNGO(this)">
+                                    <td>
+                                        <input type="radio" id="ngo_{{ ngo.id }}" name="selected_ngo" value="{{ ngo.id }}" required>
+                                    </td>
+                                    <td>{{ ngo.name }}</td>
+                                    <td><span class="category-badge">{{ ngo.services }}</span></td>
+                                    <td>
+                                        <span class="ngo-description" title="{{ ngo.description }}">
+                                            {{ ngo.description|truncatechars:50 }}
+                                        </span>
+                                    </td>
+                                    <td>{{ ngo.address }}</td>
+                                    <td>
+                                        <div class="contact-info">
+                                            <div>{{ ngo.contact_number }}</div>
+                                            <div class="email">{{ ngo.email }}</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="6" class="no-ngos-message">
+                                        <i class="fas fa-info-circle"></i>
+                                        No verified NGOs available at the moment. Please check back later.
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeVolunteerModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary submit-btn">
+                    <i class="fas fa-paper-plane"></i> Submit Application
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function viewReceipt(receiptNumber) {
+    // Show modal
+    const modal = document.getElementById('receiptModal');
+    modal.style.display = "block";
+
+    // Fetch receipt data
+    fetch(`/api/receipt/${receiptNumber}/`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('receiptContent').innerHTML = `
+                <div class="receipt-details">
+                    <p><strong>Receipt Number:</strong> ${data.receipt_number}</p>
+                    <p><strong>Date:</strong> ${data.donated_at}</p>
+                    <p><strong>NGO:</strong> ${data.ngo_name}</p>
+                    <p><strong>Amount:</strong> ₹${data.amount}</p>
+                    <p><strong>Donor:</strong> ${data.donor_name}</p>
+                </div>
+            `;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('receiptContent').innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>Failed to load receipt. Please try again later.</p>
+                </div>
+            `;
+        });
+}
+
+// Close modal
+document.querySelector('.close').onclick = function() {
+    document.getElementById('receiptModal').style.display = "none";
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('receiptModal');
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+function downloadReceipt() {
+    // Add PDF generation and download logic here
+    // You can use libraries like jsPDF or make a backend request
+    alert('Receipt download functionality will be implemented soon.');
+}
+
+function validateVolunteerForm() {
+    // Validate name
+    const name = document.getElementById('name').value;
+    if (!/^[A-Za-z\s]{2,50}$/.test(name)) {
+        alert('Please enter a valid name (2-50 characters, letters only)');
+        return false;
+    }
+
+    // Validate contact number
+    const contact = document.getElementById('contact').value;
+    if (!/^[0-9]{10}$/.test(contact)) {
+        alert('Please enter a valid 10-digit contact number');
+        return false;
+    }
+
+    // Validate address
+    const address = document.getElementById('address').value;
+    if (address.trim().length < 10) {
+        alert('Please enter a complete address (minimum 10 characters)');
+        return false;
+    }
+
+    // Validate days selection
+    const days = document.querySelectorAll('input[name="days[]"]:checked');
+    if (days.length === 0) {
+        alert('Please select at least one preferred day');
+        return false;
+    }
+
+    // Validate time slot
+    const timeSlot = document.getElementById('timeSlot').value;
+    if (!timeSlot) {
+        alert('Please select a preferred time slot');
+        return false;
+    }
+
+    // Validate NGO selection
+    const ngo = document.querySelector('input[name="selected_ngo"]:checked');
+    if (!ngo) {
+        alert('Please select an NGO to volunteer with');
+        return false;
+    }
+
+    return true;
+}
+
+function selectNGO(row) {
+    // Remove selected class from all rows
+    document.querySelectorAll('.ngo-row').forEach(r => r.classList.remove('selected'));
+    
+    // Add selected class to clicked row
+    row.classList.add('selected');
+    
+    // Check the radio button
+    const radio = row.querySelector('input[type="radio"]');
+    radio.checked = true;
+}
+
+function openVolunteerModal() {
+    document.getElementById('volunteerModal').style.display = "block";
+}
+
+function closeVolunteerModal() {
+    document.getElementById('volunteerModal').style.display = "none";
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const volunteerModal = document.getElementById('volunteerModal');
+    const receiptModal = document.getElementById('receiptModal');
+    
+    if (event.target == volunteerModal) {
+        volunteerModal.style.display = "none";
+    }
+    if (event.target == receiptModal) {
+        receiptModal.style.display = "none";
+    }
+}
+
+function toggleDonationFilters() {
+    const filterPanel = document.getElementById('donation-filter-panel');
+    if (filterPanel.style.display === "none") {
+        filterPanel.style.display = "block";
+    } else {
+        filterPanel.style.display = "none";
+    }
+}
+
+function applyDonationFilters() {
+    const ngoFilter = document.getElementById('ngo-filter').value.toLowerCase();
+    const minAmountFilter = document.getElementById('min-amount-filter').value;
+    const maxAmountFilter = document.getElementById('max-amount-filter').value;
+    const fromDateFilter = document.getElementById('from-date-filter').value;
+    const toDateFilter = document.getElementById('to-date-filter').value;
+
+    const donationTable = document.getElementById('donation-table');
+    const rows = donationTable.rows;
+
+    for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        const ngoName = row.cells[0].textContent.toLowerCase();
+        const amount = parseInt(row.cells[1].textContent.replace('₹', ''));
+        const date = new Date(row.cells[5].textContent);
+
+        if ((ngoFilter && ngoName.indexOf(ngoFilter) === -1) ||
+            (minAmountFilter && amount < parseInt(minAmountFilter)) ||
+            (maxAmountFilter && amount > parseInt(maxAmountFilter)) ||
+            (fromDateFilter && date < new Date(fromDateFilter)) ||
+            (toDateFilter && date > new Date(toDateFilter))) {
+            row.style.display = "none";
+        } else {
+            row.style.display = "";
+        }
+    }
+}
+
+function resetDonationFilters() {
+    const filterInputs = document.querySelectorAll('.filter-input');
+    filterInputs.forEach(input => input.value = "");
+
+    const donationTable = document.getElementById('donation-table');
+    const rows = donationTable.rows;
+
+    for (let i = 1; i < rows.length; i++) {
+        rows[i].style.display = "";
+    }
+}
+</script>
+
+<style>
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: black;
+}
+
+/* Receipt Styles */
+.btn-receipt {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.btn-receipt:hover {
+    background-color: #45a049;
+}
+
+.receipt-pending {
+    color: #f39c12;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.receipt-container {
+    padding: 20px;
+}
+
+.receipt-header {
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 20px;
+}
+
+.receipt-logo {
+    max-width: 150px;
+    margin-bottom: 10px;
+}
+
+.receipt-details {
+    margin: 20px 0;
+}
+
+.receipt-details p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.receipt-footer {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid #eee;
+}
+
+.btn-download {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+}
+
+.btn-download:hover {
+    background-color: #1976D2;
+}
+
+.error-message {
+    text-align: center;
+    color: #e74c3c;
+    padding: 20px;
+}
+
+.error-message i {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+/* Volunteer Registration Styles */
+.volunteer-modal {
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.volunteer-form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+.volunteer-form-header i {
+    font-size: 2.5rem;
+    color: #879957;
+    margin-bottom: 1rem;
+}
+
+.volunteer-form-header h2 {
+    margin: 0.5rem 0;
+    color: #2c3e50;
+}
+
+.volunteer-form-header p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.form-section {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+
+.form-section h3 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-section h3 i {
+    color: #879957;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.required {
+    color: #e74c3c;
+    margin-left: 3px;
+}
+
+.form-help {
+    display: block;
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="tel"],
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #879957;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(135, 153, 87, 0.1);
+}
+
+.days-selection .checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.day-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.day-checkbox:hover {
+    background: #f0f2f5;
+}
+
+.day-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.ngo-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.ngo-table th {
+    background: #879957;
+    color: white;
+    padding: 1rem;
+    text-align: left;
+}
+
+.ngo-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.ngo-row {
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.ngo-row:hover {
+    background-color: #f5f8ff;
+}
+
+.ngo-row.selected {
+    background-color: #e9f5ff;
+}
+
+.category-badge {
+    background: #879957;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.9rem;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+.submit-btn {
+    background: #879957;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: #6a7a44;
+    transform: translateY(-2px);
+}
+
+.submit-btn i {
+    font-size: 1.1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .volunteer-modal {
+        padding: 1rem;
+        margin: 1rem;
+        width: calc(100% - 2rem);
+    }
+
+    .days-selection .checkbox-group {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions button {
+        width: 100%;
+    }
+}
+
+/* Add these styles to your existing CSS */
+.ngo-description {
+    display: block;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: help;
+}
+
+.contact-info {
+    font-size: 0.9rem;
+}
+
+.contact-info .email {
+    color: #666;
+    font-size: 0.85rem;
+    margin-top: 2px;
+}
+
+.no-ngos-message {
+    text-align: center;
+    padding: 2rem !important;
+    color: #666;
+}
+
+.no-ngos-message i {
+    font-size: 1.5rem;
+    color: #879957;
+    margin-right: 0.5rem;
+}
+
+.ngo-table td {
+    vertical-align: top;
+}
+
+@media (max-width: 1024px) {
+    .ngo-table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .ngo-description {
+        max-width: 150px;
+    }
+}
+
+/* Filter Panel Styles */
+.filter-panel {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+
+.filter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-input {
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.filter-input:focus {
+    border-color: #879957;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(135, 153, 87, 0.1);
+}
+
+.filter-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.btn-apply {
+    background: #879957;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-apply:hover {
+    background: #6a7a44;
+}
+
+.btn-reset {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-reset:hover {
+    background: #5a6268;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.history-header h2 {
+    margin: 0;
+}
+
+.btn-filter {
+    background-color: #879957;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-filter:hover {
+    background-color: #6a7a44;
+}
+</style>
+{% endblock %}

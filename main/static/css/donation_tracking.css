@@ -1,0 +1,448 @@
+/* Donation Tracking Page Styles - v2 */
+/* Last updated: March 16, 2024 */
+.donation-tracking {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* User Welcome Section */
+.user-welcome {
+  background: linear-gradient(135deg, #4a6741, #2e4024);
+  color: white;
+  padding: 2.5rem;
+  border-radius: 20px;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.user-welcome::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(45deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%);
+  pointer-events: none;
+}
+
+.user-welcome h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.user-welcome i {
+  font-size: 2.2rem;
+}
+
+/* Donation Summary Section */
+.donation-summary {
+  margin-bottom: 3rem;
+}
+
+.donation-summary h2 {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.summary-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.summary-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #4a6741, #2e4024);
+}
+
+.summary-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.summary-card h3 {
+  font-size: 2.2rem;
+  color: #4a6741;
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+
+.summary-card p {
+  color: #555;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.summary-card i {
+  font-size: 1.2rem;
+  color: #4a6741;
+}
+
+/* Volunteer Section */
+.volunteer-section {
+  margin: 2rem 0;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.volunteer-section h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.volunteer-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+.volunteer-content {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.volunteer-text {
+  flex: 1;
+}
+
+.volunteer-text h3 {
+  color: #4a6741;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.volunteer-text p {
+  color: #444;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.volunteer-benefits {
+  list-style: none;
+  margin-bottom: 2rem;
+}
+
+.volunteer-benefits li {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
+  color: #444;
+}
+
+.volunteer-benefits i {
+  color: #4a6741;
+}
+
+.volunteer-image {
+  flex: 1;
+  max-width: 400px;
+}
+
+.volunteer-image img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.volunteer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #4a6741;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.volunteer-btn:hover {
+  background: #2e4024;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Volunteer Applications Section */
+.volunteer-applications {
+  margin: 3rem 0;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+}
+
+.volunteer-applications h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.volunteer-applications h2 i {
+  color: #4a6741;
+}
+
+.application-section {
+  margin-bottom: 2rem;
+}
+
+.application-section:last-child {
+  margin-bottom: 0;
+}
+
+.application-section h3 {
+  color: #4a6741;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.application-section h3 i {
+  color: #4a6741;
+}
+
+.application-section .history-table {
+  overflow-x: auto;
+}
+
+.application-section table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.application-section th {
+  background-color: #f8f9fa;
+  color: #333;
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 2px solid #4a6741;
+}
+
+.application-section td {
+  padding: 1rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.application-section tr:hover {
+  background-color: #f8f9fa;
+}
+
+.application-section th i {
+  color: #4a6741;
+  margin-right: 0.5rem;
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-block;
+  padding: 0.35rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.status-badge.pending {
+  background-color: #ffeeba;
+  color: #876404;
+}
+
+.status-badge.approved {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-badge.rejected {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Receipt button */
+.btn-receipt {
+  background-color: #4a6741;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-receipt:hover {
+  background-color: #2e4024;
+}
+
+/* Donation History */
+.donation-history {
+  margin: 3rem 0;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+}
+
+.donation-history h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.donation-history h2 i {
+  color: #4a6741;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .summary-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .donation-tracking {
+    padding: 1rem;
+  }
+
+  .user-welcome {
+    padding: 2rem;
+  }
+
+  .user-welcome h1 {
+    font-size: 2rem;
+  }
+
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .volunteer-content {
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+
+  .volunteer-image {
+    order: -1;
+    max-width: 100%;
+  }
+
+  .volunteer-image img {
+    height: 200px;
+  }
+
+  .volunteer-section {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+
+  .volunteer-applications {
+    padding: 1rem;
+  }
+  
+  .application-section table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.summary-card,
+.volunteer-section {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.no-data {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 20px;
+}
+
+/* Application Section Styling */
+.application-section {
+    margin-bottom: 30px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+
+.application-section h3 {
+    color: #333;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.application-section h3 i {
+    color: #2196F3;
+} 

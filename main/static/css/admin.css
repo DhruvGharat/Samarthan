@@ -1,0 +1,219 @@
+/* Admin Dashboard Styles */
+.admin-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+.admin-header {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.admin-header h1 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.admin-header p {
+    color: var(--text-secondary);
+}
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.admin-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-card h2 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.admin-table-container {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.admin-table th {
+    background: var(--bg-light);
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.admin-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.admin-table tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-table tr:hover {
+    background: var(--bg-light);
+}
+
+.admin-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.admin-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.admin-btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.admin-btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+.admin-btn-secondary {
+    background: var(--gray-100);
+    color: var(--text-primary);
+}
+
+.admin-btn-secondary:hover {
+    background: var(--gray-200);
+}
+
+.admin-btn-danger {
+    background: var(--danger-color);
+    color: white;
+}
+
+.admin-btn-danger:hover {
+    background: var(--danger-dark);
+}
+
+/* View Details Page */
+.admin-details {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem auto;
+    max-width: 800px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.admin-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.admin-details-header h1 {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+}
+
+.admin-details-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+.admin-details-section {
+    margin-bottom: 2rem;
+}
+
+.admin-details-section h2 {
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.admin-details-item {
+    margin-bottom: 1rem;
+}
+
+.admin-details-label {
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+}
+
+.admin-details-value {
+    color: var(--text-primary);
+}
+
+.admin-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.admin-filter {
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+}
+
+.admin-filter:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.admin-search {
+    flex: 1;
+    min-width: 200px;
+}
+
+@media (max-width: 768px) {
+    .admin-container {
+        padding: 0 1rem;
+    }
+
+    .admin-details-content {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-table-container {
+        margin: 0 -1rem;
+        border-radius: 0;
+    }
+}
